@@ -28,23 +28,25 @@ services:
       - frontend
 
   # --- Project showrooms ---
-  # Add new project services below. Each project gets:
-  #   - an app container (image from GHCR)
-  #   - a db container (internal network only)
-  #
-  # Example:
-  # raidfines-app:
-  #   image: ghcr.io/gabel1998/raidfines:latest
-  #   expose: ["8081"]
-  #   depends_on: [raidfines-db]
-  #   networks: [frontend, raidfines-internal]
-  #
-  # raidfines-db:
-  #   image: mysql:8
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_RAIDFINES}
-  #     MYSQL_DATABASE: raidfines
-  #   networks: [raidfines-internal]
+
+  raidfines-frontend:
+    image: ghcr.io/gabel1998/raid-fines/frontend:showroom
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - frontend
+
+  raidfines-backend:
+    image: ghcr.io/gabel1998/raid-fines/backend:showroom
+    restart: unless-stopped
+    expose:
+      - "8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=showroom
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost}
+    networks:
+      - frontend
 
 networks:
   frontend:
