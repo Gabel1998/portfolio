@@ -1,0 +1,80 @@
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: var(--nav-height);
+}
+
+.hero__content {
+    max-width: 700px;
+}
+
+.hero__greeting {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.hero__name {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.hero__title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    margin-bottom: var(--space-md);
+}
+
+.hero__tagline {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xl);
+    max-width: 560px;
+}
+
+.hero__cta {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    border: none;
+}
+
+.btn--primary {
+    background-color: var(--color-accent);
+    color: #fff;
+}
+
+.btn--primary:hover {
+    background-color: #1d4ed8;
+    text-decoration: none;
+}
+
+.btn--outline {
+    background-color: transparent;
+    color: var(--color-accent);
+    border: 1.5px solid var(--color-accent);
+}
+
+.btn--outline:hover {
+    background-color: var(--color-accent);
+    color: #fff;
+    text-decoration: none;
+}
