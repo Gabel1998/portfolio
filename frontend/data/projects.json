@@ -18,5 +18,15 @@
         "github": "https://github.com/Gabel1998/webCrawler",
         "showroomPath": "/webcrawler",
         "image": null
+    },
+    {
+        "slug": "beskyttelsesrum",
+        "title": "Beskyttelsesrum Danmark",
+        "description": "An interactive overview of Danish civil protection shelters. Browse municipalities, view capacity reports, explore an interactive map, and manage maintenance schedules.",
+        "descriptionDa": "Et interaktivt overblik over danske beskyttelsesrum. Gennemse kommuner, se kapacitetsrapporter, udforsk et interaktivt kort og administrer vedligeholdelsesplaner.",
+        "tech": ["Java", "Spring Boot", "JPA", "Leaflet.js", "Vanilla JS", "H2"],
+        "github": "https://github.com/Gabel1998/beskyttelsesrum",
+        "showroomPath": "/beskyttelsesrum",
+        "image": null
     }
 ]
