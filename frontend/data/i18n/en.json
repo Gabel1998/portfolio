@@ -41,6 +41,8 @@
     },
     "experience": {
         "heading": "Experience",
+        "showMore": "Show More",
+        "showLess": "Show Less",
         "items": [
             {
                 "title": "IT Operations",
@@ -53,6 +55,24 @@
                 "org": "KEA — Copenhagen School of Design and Technology",
                 "period": "2024 – 2026",
                 "description": "Full-stack development with Java, Spring Boot, databases, and software architecture. Currently in 4th semester."
+            },
+            {
+                "title": "Teacher — Special Needs Education",
+                "org": "Vigersted Skole — A-Huset",
+                "period": "2023 – 2024",
+                "description": "Taught science and religious studies to students with autism. Liaison between municipal agencies and the school, ensuring the best learning environment for young people with extra challenges."
+            },
+            {
+                "title": "Theology",
+                "org": "University of Copenhagen — Faculty of Theology",
+                "period": "2021 – 2023",
+                "description": "Studied theology. Active member of the board of 'Teobar' and 'Teologisk Vandrelaug'."
+            },
+            {
+                "title": "Naval Officer Cadet",
+                "org": "Royal Danish Naval Academy",
+                "period": "2019 – 2021",
+                "description": "Training in leadership, navigation, meteorology, ship manoeuvring, and maritime law. Completed sergeant education and was appointed sergeant. Responsible for voyage planning and participated in multiple voyages at sea."
             }
         ]
     },
