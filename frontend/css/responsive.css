@@ -18,6 +18,14 @@
         padding-bottom: var(--space-xl);
     }
 
+    .hero__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero__plasma {
+        max-height: 320px;
+    }
+
     .hero__cta {
         flex-direction: column;
     }

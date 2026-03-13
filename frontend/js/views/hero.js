@@ -1,4 +1,5 @@
 import I18n from '../modules/i18n.js';
+import Plasma from '../modules/plasma.js';
 
 const Hero = (() => {
 
@@ -8,7 +9,7 @@ const Hero = (() => {
         section.id = 'hero';
 
         section.innerHTML = `
-            <div class="container">
+            <div class="container hero__grid">
                 <div class="hero__content">
                     <p class="hero__greeting" data-i18n="hero.greeting">${I18n.t('hero.greeting')}</p>
                     <h1 class="hero__name" data-i18n="hero.name">${I18n.t('hero.name')}</h1>
@@ -20,8 +21,16 @@ const Hero = (() => {
                         <a href="/static/cv-andreas-gabel.pdf" download class="btn btn--outline" data-i18n="hero.cta.cv">${I18n.t('hero.cta.cv')}</a>
                     </div>
                 </div>
+                <div class="hero__plasma">
+                    <canvas id="plasma-canvas"></canvas>
+                </div>
             </div>
         `;
+
+        requestAnimationFrame(() => {
+            const canvas = section.querySelector('#plasma-canvas');
+            if (canvas) Plasma.init(canvas);
+        });
 
         return section;
     }
