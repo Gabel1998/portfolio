@@ -24,6 +24,11 @@ services:
       - "8080"
     environment:
       - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+    volumes:
+      - ./docker-compose.yml:/app/docker-compose.yml:ro
+      - ./nginx/nginx.conf:/app/nginx.conf:ro
+      - ./.github/workflows:/app/workflows/portfolio:ro
     networks:
       - frontend
 
