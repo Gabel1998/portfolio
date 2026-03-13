@@ -1,5 +1,15 @@
 [
     {
+        "slug": "portfolio",
+        "title": "This Portfolio",
+        "description": "The site you're looking at. A containerized multi-project platform running on a single droplet — Docker Compose, Nginx reverse proxy, CI/CD via GitHub Actions, and auto-generated infrastructure documentation.",
+        "descriptionDa": "Siden du kigger på nu. En containeriseret multi-projekt platform der kører på en enkelt droplet — Docker Compose, Nginx reverse proxy, CI/CD via GitHub Actions og auto-genereret infrastruktur-dokumentation.",
+        "tech": ["Docker", "Nginx", "GitHub Actions", "Spring Boot", "Three.js", "DigitalOcean"],
+        "github": "https://github.com/Gabel1998/Portfolio-project",
+        "infrastructurePath": "/infrastructure.html",
+        "image": null
+    },
+    {
         "slug": "raidfines",
         "title": "Raid Fines",
         "description": "A World of Warcraft raid fine management system. Players accrue fines for infractions during raid, officers log fines, and players view their balance.",

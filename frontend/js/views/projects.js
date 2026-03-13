@@ -30,6 +30,7 @@ const Projects = (() => {
                     </div>
                     <div class="project-card__links">
                         ${project.showroomPath ? `<a href="${project.showroomPath}" class="project-card__link" data-i18n="projects.liveDemo">${I18n.t('projects.liveDemo')}</a>` : ''}
+                        ${project.infrastructurePath ? `<a href="${project.infrastructurePath}" class="project-card__link" data-i18n="projects.learnMore">${I18n.t('projects.learnMore')}</a>` : ''}
                         ${project.github ? `<a href="${project.github}" target="_blank" rel="noopener" class="project-card__link" data-i18n="projects.viewCode">${I18n.t('projects.viewCode')}</a>` : ''}
                     </div>
                 </div>
