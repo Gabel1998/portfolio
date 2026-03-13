@@ -10,12 +10,17 @@
 
 .skills__category h3 {
     margin-bottom: var(--space-md);
-    color: var(--color-text-secondary);
     font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
+
+.skills__category--backend h3  { color: #2563EB; }
+.skills__category--devops h3   { color: #16A34A; }
+.skills__category--frontend h3 { color: #EA580C; }
+.skills__category--data h3     { color: #7C3AED; }
+.skills__category--tools h3    { color: #0D9488; }
 
 .skills__tags {
     display: flex;
