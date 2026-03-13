@@ -19,8 +19,8 @@
     },
     "about": {
         "heading": "About Me",
-        "p1": "I'm a 4th semester Computer Science (Datamatiker) student at KEA in Copenhagen, with a passion for building software that solves real problems.",
-        "p2": "I currently work in IT Operations at Københavns Kommune, focusing on Linux server administration, automation, and municipal IT infrastructure.",
+        "p1": "I'm a 4th semester Computer Science (Datamatiker) student at EK (Erhvervsakademi København) in Copenhagen, with a passion for building software that solves real problems.",
+        "p2": "I work in the Borgerservice Udvikling department at Københavns Kommune, managing IT infrastructure and Linux environments across 7 locations and contributing to the automation of internal processes.",
         "p3": "This portfolio is more than a list of projects — every application you see here is running live on a single server, containerized with Docker, routed through Nginx, and deployed via CI/CD pipelines. The infrastructure itself is part of the portfolio."
     },
     "skills": {
@@ -51,11 +51,11 @@
                 "org": "Københavns Kommune",
                 "period": "Present",
                 "type": "work",
-                "description": "Linux server administration, automation, and infrastructure management for municipal IT systems."
+                "description": "Managing IT infrastructure and Linux environments across 7 citizen service locations. Hardware setup, patch panels, and workstations. Contributing to the automation of internal processes and setting up test environments."
             },
             {
                 "title": "Computer Science (Datamatiker)",
-                "org": "KEA — Copenhagen School of Design and Technology",
+                "org": "EK — Erhvervsakademi København",
                 "period": "2024 – 2026",
                 "type": "education",
                 "description": "Full-stack development with Java, Spring Boot, databases, and software architecture. Currently in 4th semester."

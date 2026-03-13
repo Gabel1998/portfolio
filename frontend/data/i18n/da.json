@@ -19,8 +19,8 @@
     },
     "about": {
         "heading": "Om mig",
-        "p1": "Jeg er datamatikerstuderende på 4. semester på KEA i København, med en passion for at bygge software der løser virkelige problemer.",
-        "p2": "Jeg arbejder i IT-drift hos Københavns Kommune med fokus på Linux-serveradministration, automatisering og kommunal IT-infrastruktur.",
+        "p1": "Jeg er datamatikerstuderende på 4. semester på EK (Erhvervsakademi København), med en passion for at bygge software der løser virkelige problemer.",
+        "p2": "Jeg arbejder i Borgerservice Udvikling hos Københavns Kommune, hvor jeg drifter IT-infrastruktur og Linux-miljøer på tværs af 7 lokationer og medvirker til automatisering af interne processer.",
         "p3": "Denne portfolio er mere end en liste over projekter — alle applikationer kører live på én server, containeriseret med Docker, routet gennem Nginx og deployet via CI/CD pipelines. Infrastrukturen er i sig selv en del af portfolioen."
     },
     "skills": {
@@ -51,11 +51,11 @@
                 "org": "Københavns Kommune",
                 "period": "Nu",
                 "type": "work",
-                "description": "Linux-serveradministration, automatisering og infrastrukturstyring for kommunale IT-systemer."
+                "description": "Drift af IT-infrastruktur og Linux-miljøer på tværs af 7 borgerservicelokaliteter. Opsætning af hardware, krydsfelter og arbejdsstationer. Medvirker til automatisering af interne processer og opsætning af testmiljøer."
             },
             {
                 "title": "Datamatiker",
-                "org": "KEA — Københavns Erhvervsakademi",
+                "org": "EK — Erhvervsakademi København",
                 "period": "2024 – 2026",
                 "type": "education",
                 "description": "Full-stack udvikling med Java, Spring Boot, databaser og softwarearkitektur. I gang med 4. semester."
