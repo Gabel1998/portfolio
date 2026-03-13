@@ -3,11 +3,11 @@ import I18n from '../modules/i18n.js';
 const Skills = (() => {
 
     const skillData = {
-        backend:  ['Java', 'Spring Boot', 'Python', 'Flask'],
-        devops:   ['Docker', 'Docker Compose', 'GitHub Actions', 'Nginx', 'Linux', 'Bash'],
-        frontend: ['HTML', 'CSS', 'JavaScript', 'Thymeleaf', 'D3.js'],
-        data:     ['Python', 'Keras / TensorFlow', 'n8n', 'Ollama', 'Neo4j'],
-        tools:    ['Git', 'GitHub', 'DigitalOcean', 'Power Platform', 'MySQL', 'PostgreSQL']
+        backend:  ['Java', 'Spring Boot', 'Spring Data JPA', 'Python', 'Flask', 'Ruby', 'REST APIs'],
+        devops:   ['Docker', 'Docker Compose', 'GitHub Actions', 'Nginx', 'Linux', 'Bash', 'SSH', 'DigitalOcean'],
+        frontend: ['HTML', 'CSS', 'JavaScript', 'Thymeleaf'],
+        ai:       ['Keras / TensorFlow', 'n8n', 'Ollama', 'Pandas', 'Neo4j', 'RAG'],
+        tools:    ['Git', 'GitHub', 'MySQL', 'SQLite', 'Power Platform', 'Maven', 'Selenium']
     };
 
     function render() {
