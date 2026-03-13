@@ -48,5 +48,36 @@ services:
     networks:
       - frontend
 
+  # --- Web Crawler Showroom ---
+
+  webcrawler-frontend:
+    image: ghcr.io/gabel1998/webcrawler/frontend:showroom
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - frontend
+
+  webcrawler-backend:
+    image: ghcr.io/gabel1998/webcrawler/backend:showroom
+    restart: unless-stopped
+    expose:
+      - "8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=showroom
+      - SELENIUM_REMOTE_URL=http://selenium-chrome:4444/wd/hub
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+    networks:
+      - frontend
+
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    restart: unless-stopped
+    shm_size: '2g'
+    expose:
+      - "4444"
+    networks:
+      - frontend
+
 networks:
   frontend:

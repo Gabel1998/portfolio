@@ -5,7 +5,7 @@
         "description": "A World of Warcraft raid fine management system. Players accrue fines for infractions during raid, officers log fines, and players view their balance.",
         "descriptionDa": "Et World of Warcraft raid-bødesystem. Spillere opkræves bøder for overtrædelser under raid, officers logger bøder, og spillere kan se deres saldo.",
         "tech": ["Java", "Spring Boot", "MySQL", "Vanilla JS", "Docker", "OAuth2"],
-        "github": "https://github.com/gabel1998/raidfines",
+        "github": "https://github.com/Gabel1998/raid-fines",
         "showroomPath": "/raidfines",
         "image": null
     },
@@ -15,7 +15,7 @@
         "description": "A configurable web crawler with visual output. Crawls a target domain, maps URL relationships, and renders an interactive D3.js network visualization.",
         "descriptionDa": "En konfigurerbar webcrawler med visuel output. Crawler et måldomæne, kortlægger URL-relationer og renderer en interaktiv D3.js netværksvisualisering.",
         "tech": ["Java", "Spring Boot", "Jsoup", "Selenium", "D3.js", "MySQL"],
-        "github": "https://github.com/gabel1998/web-crawler",
+        "github": "https://github.com/Gabel1998/webCrawler",
         "showroomPath": "/webcrawler",
         "image": null
     }
