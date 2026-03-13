@@ -11,7 +11,7 @@ const About = (() => {
             <div class="container">
                 <div class="about__inner">
                     <div class="about__image-wrapper">
-                        <img src="/images/profile.jpg" alt="Andreas Gabel" class="about__image">
+                        <img src="/images/profile.png" alt="Andreas Gabel" class="about__image">
                     </div>
                     <div class="about__text">
                         <h2 data-i18n="about.heading">${I18n.t('about.heading')}</h2>

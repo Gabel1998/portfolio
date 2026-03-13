@@ -16,7 +16,7 @@ const Skills = (() => {
         section.id = 'skills';
 
         const categories = Object.entries(skillData).map(([key, techs]) => `
-            <div class="skills__category">
+            <div class="skills__category skills__category--${key}">
                 <h3 data-i18n="skills.categories.${key}">${I18n.t(`skills.categories.${key}`)}</h3>
                 <div class="skills__tags">
                     ${techs.map(t => `<span class="skills__tag">${t}</span>`).join('')}
