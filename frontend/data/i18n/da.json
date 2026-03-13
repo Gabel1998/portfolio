@@ -43,35 +43,42 @@
         "heading": "Erfaring",
         "showMore": "Vis Mere",
         "showLess": "Vis Mindre",
+        "workLabel": "Arbejde",
+        "eduLabel": "Uddannelse",
         "items": [
             {
                 "title": "IT-drift",
                 "org": "Københavns Kommune",
                 "period": "Nu",
+                "type": "work",
                 "description": "Linux-serveradministration, automatisering og infrastrukturstyring for kommunale IT-systemer."
             },
             {
                 "title": "Datamatiker",
                 "org": "KEA — Københavns Erhvervsakademi",
                 "period": "2024 – 2026",
+                "type": "education",
                 "description": "Full-stack udvikling med Java, Spring Boot, databaser og softwarearkitektur. I gang med 4. semester."
             },
             {
                 "title": "Lærer m. Særlige Kvalifikationer",
                 "org": "Vigersted Skole — A-Huset",
                 "period": "2023 – 2024",
+                "type": "work",
                 "description": "Ansvarlig for naturvidenskabelige fag og kristendomskundskab for elever med autisme. Bindeled mellem kommunale instanser og skolen for at sikre de bedste læringsrammer for unge med ekstra bagage."
             },
             {
                 "title": "Teologi",
                 "org": "Københavns Universitet — Teologisk Fakultet",
                 "period": "2021 – 2023",
+                "type": "education",
                 "description": "Studerede teologi. Aktivt medlem af bestyrelsen for 'Teobar' og 'Teologisk Vandrelaug'."
             },
             {
                 "title": "Kadet — Søværnets Officersskole",
                 "org": "Søværnets Officersskole / Sergentskole",
                 "period": "2019 – 2021",
+                "type": "education",
                 "description": "Uddannelse inden for ledelse, navigation, meteorologi, skibsmanøvrer og søvejsregler. Gennemførte sergentuddannelsen og blev udnævnt til sergent. Ansvarlig for sejladsplanlægning og deltog i flere togter."
             }
         ]

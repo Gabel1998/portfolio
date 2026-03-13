@@ -5,8 +5,9 @@ const Experience = (() => {
     const visibleCount = 2;
 
     function renderItem(item) {
+        const side = item.type === 'work' ? 'work' : 'education';
         return `
-            <div class="timeline__item">
+            <div class="timeline__item timeline__item--${side}">
                 <div class="timeline__dot"></div>
                 <div class="timeline__period">${item.period}</div>
                 <div class="timeline__title">${item.title}</div>
@@ -18,7 +19,7 @@ const Experience = (() => {
 
     function render() {
         const section = document.createElement('section');
-        section.className = 'experience section section--right reveal';
+        section.className = 'experience section section--center reveal';
         section.id = 'experience';
 
         const items = I18n.t('experience.items');
@@ -30,6 +31,10 @@ const Experience = (() => {
         section.innerHTML = `
             <div class="container">
                 <h2 data-i18n="experience.heading">${I18n.t('experience.heading')}</h2>
+                <div class="timeline__labels">
+                    <span class="timeline__label--work" data-i18n="experience.workLabel">${I18n.t('experience.workLabel')}</span>
+                    <span class="timeline__label--edu" data-i18n="experience.eduLabel">${I18n.t('experience.eduLabel')}</span>
+                </div>
                 <div class="timeline">
                     ${visible.map(renderItem).join('')}
                     ${hidden.length ? `

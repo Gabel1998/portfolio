@@ -1,24 +1,54 @@
+.experience {
+    overflow: hidden;
+}
+
 .experience h2 {
+    margin-bottom: var(--space-sm);
+    text-align: center;
+}
+
+.timeline__labels {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-xl);
     margin-bottom: var(--space-lg);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+}
+
+.timeline__label--work {
+    text-align: right;
+    width: calc(50% - var(--space-lg));
+}
+
+.timeline__label--edu {
+    text-align: left;
+    width: calc(50% - var(--space-lg));
 }
 
 .timeline {
     position: relative;
-    padding-left: var(--space-xl);
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .timeline::before {
     content: '';
     position: absolute;
-    left: 7px;
-    top: 4px;
-    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    bottom: 0;
     width: 2px;
     background-color: var(--color-border);
 }
 
 .timeline__item {
     position: relative;
+    width: calc(50% - var(--space-xl));
     margin-bottom: var(--space-xl);
 }
 
@@ -26,15 +56,35 @@
     margin-bottom: 0;
 }
 
+.timeline__item--work {
+    margin-right: auto;
+    text-align: right;
+    padding-right: var(--space-lg);
+}
+
+.timeline__item--education {
+    margin-left: auto;
+    text-align: left;
+    padding-left: var(--space-lg);
+}
+
 .timeline__dot {
     position: absolute;
-    left: calc(-1 * var(--space-xl) + 2px);
     top: 6px;
     width: 12px;
     height: 12px;
     border-radius: 50%;
     background-color: var(--color-accent);
     border: 2px solid var(--color-bg);
+    z-index: 1;
+}
+
+.timeline__item--work .timeline__dot {
+    right: calc(-1 * var(--space-xl) - 6px + 1px);
+}
+
+.timeline__item--education .timeline__dot {
+    left: calc(-1 * var(--space-xl) - 6px + 1px);
 }
 
 .timeline__period {
@@ -63,6 +113,39 @@
 }
 
 .timeline__toggle {
-    margin-top: var(--space-lg);
+    display: block;
+    margin: var(--space-lg) auto 0;
     font-size: 0.9rem;
+}
+
+/* Mobile: single column */
+@media (max-width: 768px) {
+    .timeline__labels {
+        display: none;
+    }
+
+    .timeline::before {
+        left: 7px;
+    }
+
+    .timeline__item {
+        width: 100%;
+        text-align: left;
+        padding-left: var(--space-xl);
+        padding-right: 0;
+    }
+
+    .timeline__item--work,
+    .timeline__item--education {
+        margin-left: 0;
+        margin-right: 0;
+        text-align: left;
+        padding-left: var(--space-xl);
+    }
+
+    .timeline__item--work .timeline__dot,
+    .timeline__item--education .timeline__dot {
+        left: 2px;
+        right: auto;
+    }
 }
