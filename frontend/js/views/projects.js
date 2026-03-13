@@ -11,7 +11,7 @@ const Projects = (() => {
 
     function render() {
         const section = document.createElement('section');
-        section.className = 'projects section section--alt reveal';
+        section.className = 'projects section section--alt section--center reveal';
         section.id = 'projects';
 
         const lang = I18n.getLang();

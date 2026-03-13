@@ -9,11 +9,16 @@ const About = (() => {
 
         section.innerHTML = `
             <div class="container">
-                <h2 data-i18n="about.heading">${I18n.t('about.heading')}</h2>
-                <div class="about__text">
-                    <p data-i18n="about.p1">${I18n.t('about.p1')}</p>
-                    <p data-i18n="about.p2">${I18n.t('about.p2')}</p>
-                    <p data-i18n="about.p3">${I18n.t('about.p3')}</p>
+                <div class="about__inner">
+                    <div class="about__image-wrapper">
+                        <img src="/images/profile.jpg" alt="Andreas Gabel" class="about__image">
+                    </div>
+                    <div class="about__text">
+                        <h2 data-i18n="about.heading">${I18n.t('about.heading')}</h2>
+                        <p data-i18n="about.p1">${I18n.t('about.p1')}</p>
+                        <p data-i18n="about.p2">${I18n.t('about.p2')}</p>
+                        <p data-i18n="about.p3">${I18n.t('about.p3')}</p>
+                    </div>
                 </div>
             </div>
         `;

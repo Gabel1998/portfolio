@@ -4,7 +4,7 @@ const Contact = (() => {
 
     function render() {
         const section = document.createElement('section');
-        section.className = 'contact section section--alt reveal';
+        section.className = 'contact section section--alt section--left reveal';
         section.id = 'contact';
 
         section.innerHTML = `
