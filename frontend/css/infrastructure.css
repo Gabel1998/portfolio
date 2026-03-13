@@ -1,0 +1,330 @@
+.infra {
+    padding: var(--space-xl) 0;
+    min-height: 100vh;
+}
+
+.infra__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: var(--space-lg);
+}
+
+.infra__back:hover {
+    text-decoration: underline;
+}
+
+.infra h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: var(--space-sm);
+}
+
+.infra__subtitle {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xl);
+    max-width: 600px;
+}
+
+.infra__section {
+    margin-bottom: var(--space-xl);
+}
+
+.infra__section h2 {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-md);
+    color: var(--color-text-primary);
+}
+
+/* Diagram */
+.infra__diagram {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    overflow-x: auto;
+}
+
+.infra__diagram svg {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Route table */
+.infra__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.infra__table th,
+.infra__table td {
+    text-align: left;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.infra__table th {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.infra__table tr:hover td {
+    background: var(--color-surface);
+}
+
+/* CI/CD Pipeline */
+
+.cicd__project-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.cicd__tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.cicd__tab:hover {
+    border-color: var(--color-accent);
+    color: var(--color-text-primary);
+}
+
+.cicd__tab--active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+}
+
+.cicd__repo-link {
+    margin-bottom: var(--space-md);
+}
+
+.cicd__repo-link a {
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.cicd__repo-link a:hover {
+    text-decoration: underline;
+}
+
+.cicd__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-lg);
+}
+
+.cicd__workflow {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+}
+
+.cicd__header {
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cicd__title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: var(--color-text-primary);
+}
+
+.cicd__file {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    opacity: 0.7;
+    margin-bottom: 0.3rem;
+}
+
+.cicd__trigger {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+}
+
+.cicd__trigger-label {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.73rem;
+    background: var(--color-bg);
+    padding: 0.1rem 0.35rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+}
+
+.cicd__trigger-detail {
+    font-size: 0.73rem;
+    color: var(--color-text-secondary);
+}
+
+.cicd__jobs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cicd__job {
+    width: 100%;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+}
+
+.cicd__job-name {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+}
+
+.cicd__job-env {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    margin-bottom: 0.4rem;
+    padding: 0.15rem 0.4rem;
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    display: inline-block;
+}
+
+.cicd__job-needs {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    margin-bottom: 0.4rem;
+}
+
+.cicd__job-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cicd__step {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+    padding-left: 1rem;
+    position: relative;
+}
+
+.cicd__step::before {
+    content: '›';
+    position: absolute;
+    left: 0.2rem;
+    color: var(--color-border);
+    font-weight: bold;
+}
+
+.cicd__arrow-down {
+    width: 1px;
+    height: 1.25rem;
+    background: var(--color-border);
+    position: relative;
+}
+
+.cicd__arrow-down::after {
+    content: '▼';
+    position: absolute;
+    bottom: -0.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.5rem;
+    color: var(--color-border);
+}
+
+.cicd__result {
+    margin-top: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cicd__result--gate {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #F59E0B;
+}
+
+.cicd__result--live {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #10B981;
+}
+
+/* Service cards in diagram */
+.infra__svc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-md);
+}
+
+.infra__svc-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+.infra__svc-card h3 {
+    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+}
+
+.infra__svc-detail {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.infra__svc-detail span {
+    color: var(--color-text-primary);
+}
+
+.infra__env-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    margin: 0.15rem 0.15rem 0 0;
+}
+
+@media (max-width: 768px) {
+    .cicd {
+        grid-template-columns: 1fr;
+    }
+}

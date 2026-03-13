@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio Infrastructure — Live architecture diagram and DevOps documentation.">
+    <title>Infrastructure — Andreas Gabel</title>
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/infrastructure.css">
+</head>
+<body>
+
+    <main class="infra">
+        <div class="container">
+            <a href="/" class="infra__back">&larr; Back to portfolio</a>
+
+            <h1>Infrastructure</h1>
+            <p class="infra__subtitle">
+                This portfolio runs on a single DigitalOcean droplet. Every project is containerized, routed through Nginx, and deployed via CI/CD. This page is auto-generated from the live configuration.
+            </p>
+
+            <!-- Deployment Diagram (PlantUML, auto-generated) -->
+            <div class="infra__section">
+                <h2>Deployment Diagram</h2>
+                <p style="font-size:0.85rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">Auto-generated from the live docker-compose.yml and nginx.conf</p>
+                <div class="infra__diagram" id="diagram-container">
+                    <p style="color: var(--color-text-secondary);">Loading deployment diagram...</p>
+                </div>
+            </div>
+
+            <!-- CI/CD Pipeline -->
+            <div class="infra__section">
+                <h2>CI/CD Pipelines</h2>
+                <p style="font-size:0.85rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">Auto-generated from the live GitHub Actions workflow files across all project repos.</p>
+
+                <div class="cicd__project-tabs" id="pipeline-tabs"></div>
+                <div class="cicd" id="pipeline-container">
+                    <p style="color: var(--color-text-secondary);">Loading pipeline data from GitHub...</p>
+                </div>
+            </div>
+
+            <!-- Nginx Routing (auto-generated) -->
+            <div class="infra__section">
+                <h2>Nginx Routing</h2>
+                <div class="infra__diagram">
+                    <table class="infra__table" id="routes-table">
+                        <thead>
+                            <tr>
+                                <th>Path</th>
+                                <th>Upstream</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="2" style="color: var(--color-text-secondary);">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Services detail (auto-generated) -->
+            <div class="infra__section">
+                <h2>Container Details</h2>
+                <div class="infra__svc-grid" id="services-grid">
+                    <p style="color: var(--color-text-secondary);">Loading live infrastructure data...</p>
+                </div>
+            </div>
+
+            <!-- Stack overview -->
+            <div class="infra__section">
+                <h2>Stack</h2>
+                <div class="infra__svc-grid">
+                    <div class="infra__svc-card">
+                        <h3>Hosting</h3>
+                        <p class="infra__svc-detail">DigitalOcean Droplet</p>
+                        <p class="infra__svc-detail">Ubuntu 24.04 LTS</p>
+                    </div>
+                    <div class="infra__svc-card">
+                        <h3>Reverse Proxy</h3>
+                        <p class="infra__svc-detail">Nginx (Alpine)</p>
+                        <p class="infra__svc-detail">Let's Encrypt SSL</p>
+                    </div>
+                    <div class="infra__svc-card">
+                        <h3>Containerization</h3>
+                        <p class="infra__svc-detail">Docker + Compose</p>
+                        <p class="infra__svc-detail">GHCR Image Registry</p>
+                    </div>
+                    <div class="infra__svc-card">
+                        <h3>CI/CD</h3>
+                        <p class="infra__svc-detail">GitHub Actions</p>
+                        <p class="infra__svc-detail">SSH Deploy + Health Checks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        const apiBase = location.port === '3000' ? 'http://localhost:8080' : '';
+
+        async function loadInfrastructure() {
+            try {
+                const res = await fetch(apiBase + '/api/infrastructure');
+                const data = await res.json();
+                renderServices(data.services);
+                renderRoutes(data.routes);
+                loadDiagram();
+            } catch (e) {
+                document.getElementById('diagram-container').innerHTML =
+                    '<p style="color: var(--color-text-secondary);">Could not load infrastructure data. API may not be available in local dev.</p>';
+                document.getElementById('services-grid').innerHTML =
+                    '<p style="color: var(--color-text-secondary);">Could not load infrastructure data.</p>';
+            }
+        }
+
+        async function loadDiagram() {
+            const container = document.getElementById('diagram-container');
+            try {
+                const res = await fetch(apiBase + '/api/infrastructure/diagram');
+                const data = await res.json();
+                container.innerHTML = `<img src="${data.svg}" alt="Deployment Diagram" style="width:100%;height:auto;"/>`;
+            } catch (e) {
+                container.innerHTML = '<p style="color:var(--color-text-secondary);">Could not load deployment diagram.</p>';
+            }
+        }
+
+        // --- Pipelines ---
+
+        let pipelineData = [];
+
+        async function loadPipelines() {
+            const container = document.getElementById('pipeline-container');
+            const tabs = document.getElementById('pipeline-tabs');
+            try {
+                const res = await fetch(apiBase + '/api/infrastructure/pipelines');
+                pipelineData = await res.json();
+
+                if (!pipelineData.length) {
+                    container.innerHTML = '<p style="color:var(--color-text-secondary);">No pipeline data found.</p>';
+                    return;
+                }
+
+                // Render project tabs
+                tabs.innerHTML = pipelineData.map((p, i) =>
+                    `<button class="cicd__tab${i === 0 ? ' cicd__tab--active' : ''}" data-index="${i}">${p.project}</button>`
+                ).join('');
+
+                tabs.addEventListener('click', e => {
+                    const btn = e.target.closest('.cicd__tab');
+                    if (!btn) return;
+                    tabs.querySelectorAll('.cicd__tab').forEach(b => b.classList.remove('cicd__tab--active'));
+                    btn.classList.add('cicd__tab--active');
+                    renderPipeline(pipelineData[parseInt(btn.dataset.index)]);
+                });
+
+                renderPipeline(pipelineData[0]);
+            } catch (e) {
+                container.innerHTML = '<p style="color:var(--color-text-secondary);">Could not load pipeline data.</p>';
+            }
+        }
+
+        function renderPipeline(project) {
+            const container = document.getElementById('pipeline-container');
+            const workflows = project.workflows;
+            const repos = project.repos || [];
+
+            if (!workflows || !workflows.length) {
+                container.innerHTML = '<p style="color:var(--color-text-secondary);">No workflows found for this project.</p>';
+                return;
+            }
+
+            const repoLinks = repos.map(r =>
+                `<a href="https://github.com/${r}/actions" target="_blank" rel="noopener">${r}</a>`
+            ).join(' · ');
+
+            container.innerHTML = `
+                <div class="cicd__repo-link">${repoLinks}</div>
+                <div class="cicd__grid">
+                    ${workflows.map(wf => renderWorkflow(wf)).join('')}
+                </div>
+            `;
+        }
+
+        function renderWorkflow(wf) {
+            const triggerText = formatTriggers(wf.triggers);
+            const jobs = wf.jobs || [];
+
+            // Determine if this is a deploy-type workflow
+            const hasHealthCheck = jobs.some(j => j.name?.toLowerCase().includes('health'));
+            const hasDeploy = jobs.some(j => j.name?.toLowerCase().includes('deploy'));
+            const resultType = hasDeploy ? 'live' : 'gate';
+            const resultLabel = hasDeploy ? (hasHealthCheck ? 'Verified Live' : 'Deployed') : 'Quality Gate';
+
+            return `
+                <div class="cicd__workflow">
+                    <div class="cicd__header">
+                        <h3 class="cicd__title">${escapeHtml(wf.name)}</h3>
+                        <div class="cicd__file">${wf.repo ? escapeHtml(wf.repo) + ' / ' : ''}${escapeHtml(wf.file)}</div>
+                        <div class="cicd__trigger">${triggerText}</div>
+                    </div>
+                    <div class="cicd__jobs">
+                        ${jobs.map((job, i) => `
+                            ${i > 0 && job.needs?.length ? '<div class="cicd__arrow-down"></div>' : ''}
+                            <div class="cicd__job">
+                                <div class="cicd__job-name">${escapeHtml(job.name || job.id)}</div>
+                                ${job.environment ? `<div class="cicd__job-env">environment: ${escapeHtml(job.environment)}</div>` : ''}
+                                ${job.needs?.length ? `<div class="cicd__job-needs">needs: ${job.needs.map(n => escapeHtml(n)).join(', ')}</div>` : ''}
+                                <div class="cicd__job-steps">
+                                    ${job.steps.map(s => `<div class="cicd__step">${escapeHtml(s)}</div>`).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                        <div class="cicd__result cicd__result--${resultType}">${resultLabel}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatTriggers(triggers) {
+            if (!triggers) return '';
+            return Object.entries(triggers).map(([event, cfg]) => {
+                let detail = '';
+                if (cfg.branches) detail = `branches: ${cfg.branches.join(', ')}`;
+                else if (cfg['branches-ignore']) detail = `branches except: ${cfg['branches-ignore'].join(', ')}`;
+                return `<span class="cicd__trigger-label">${event}</span>${detail ? ` <span class="cicd__trigger-detail">${detail}</span>` : ''}`;
+            }).join(' · ');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function renderServices(services) {
+            const grid = document.getElementById('services-grid');
+            if (!services || services.length === 0) {
+                grid.innerHTML = '<p>No services found.</p>';
+                return;
+            }
+
+            grid.innerHTML = services.filter(s => !s.error).map(svc => {
+                const port = svc.ports?.length
+                    ? svc.ports.join(', ')
+                    : svc.expose?.length
+                        ? svc.expose.map(p => `${p} (internal)`).join(', ')
+                        : 'none';
+
+                const source = svc.image || (svc.build ? `build: ${typeof svc.build === 'string' ? svc.build : svc.build.context || 'local'}` : 'unknown');
+                const deps = svc.dependsOn?.length ? svc.dependsOn.join(', ') : null;
+                const envs = svc.envKeys?.length
+                    ? svc.envKeys.map(k => `<span class="infra__env-tag">${k}</span>`).join('')
+                    : null;
+
+                return `
+                    <div class="infra__svc-card">
+                        <h3>${svc.name}</h3>
+                        <p class="infra__svc-detail">Source: <span>${source}</span></p>
+                        <p class="infra__svc-detail">Port: <span>${port}</span></p>
+                        ${svc.restart ? `<p class="infra__svc-detail">Restart: <span>${svc.restart}</span></p>` : ''}
+                        ${deps ? `<p class="infra__svc-detail">Depends on: <span>${deps}</span></p>` : ''}
+                        ${envs ? `<p class="infra__svc-detail">Env:</p><div>${envs}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRoutes(routes) {
+            const tbody = document.querySelector('#routes-table tbody');
+            if (!routes || routes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2">No routes found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = routes.filter(r => !r.error).map(r => `
+                <tr>
+                    <td>${r.path}</td>
+                    <td>${r.target}</td>
+                </tr>
+            `).join('');
+        }
+
+        loadInfrastructure();
+        loadPipelines();
+    </script>
+</body>
+</html>
