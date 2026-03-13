@@ -12,7 +12,7 @@ const Skills = (() => {
 
     function render() {
         const section = document.createElement('section');
-        section.className = 'skills section';
+        section.className = 'skills section reveal';
         section.id = 'skills';
 
         const categories = Object.entries(skillData).map(([key, techs]) => `

@@ -4,7 +4,7 @@ const About = (() => {
 
     function render() {
         const section = document.createElement('section');
-        section.className = 'about section section--alt';
+        section.className = 'about section section--alt reveal';
         section.id = 'about';
 
         section.innerHTML = `

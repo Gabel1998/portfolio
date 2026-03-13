@@ -4,7 +4,7 @@ const Experience = (() => {
 
     function render() {
         const section = document.createElement('section');
-        section.className = 'experience section';
+        section.className = 'experience section reveal';
         section.id = 'experience';
 
         const items = I18n.t('experience.items');
