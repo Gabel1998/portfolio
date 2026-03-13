@@ -1,0 +1,20 @@
+{
+    "nav": {
+        "about": "Om mig",
+        "skills": "Kompetencer",
+        "projects": "Projekter",
+        "experience": "Erfaring",
+        "contact": "Kontakt"
+    },
+    "hero": {
+        "greeting": "Hej, jeg er",
+        "name": "Andreas Gabel",
+        "title": "Datamatiker · IT-drift · Udvikler",
+        "tagline": "Jeg bygger rigtige applikationer, ikke bare beskrivelser. Alle projekter på denne side kører live og interaktivt.",
+        "cta": {
+            "github": "GitHub",
+            "linkedin": "LinkedIn",
+            "cv": "Download CV"
+        }
+    }
+}

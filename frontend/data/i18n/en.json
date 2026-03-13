@@ -1,0 +1,20 @@
+{
+    "nav": {
+        "about": "About",
+        "skills": "Skills",
+        "projects": "Projects",
+        "experience": "Experience",
+        "contact": "Contact"
+    },
+    "hero": {
+        "greeting": "Hi, I'm",
+        "name": "Andreas Gabel",
+        "title": "Datamatiker · IT Operations · Developer",
+        "tagline": "Building real applications, not just descriptions. Every project on this site is live and interactive.",
+        "cta": {
+            "github": "GitHub",
+            "linkedin": "LinkedIn",
+            "cv": "Download CV"
+        }
+    }
+}
