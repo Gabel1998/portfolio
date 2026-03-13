@@ -1,0 +1,21 @@
+.about {
+    background-color: var(--color-surface);
+}
+
+.about__text {
+    max-width: 700px;
+}
+
+.about__text p {
+    margin-bottom: var(--space-md);
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+}
+
+.about__text p:last-child {
+    margin-bottom: 0;
+}
+
+.about h2 {
+    margin-bottom: var(--space-lg);
+}

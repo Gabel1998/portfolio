@@ -16,5 +16,55 @@
             "linkedin": "LinkedIn",
             "cv": "Download CV"
         }
+    },
+    "about": {
+        "heading": "Om mig",
+        "p1": "Jeg er datamatikerstuderende på 4. semester på KEA i København, med en passion for at bygge software der løser virkelige problemer.",
+        "p2": "Jeg arbejder i IT-drift hos Københavns Kommune med fokus på Linux-serveradministration, automatisering og kommunal IT-infrastruktur.",
+        "p3": "Denne portfolio er mere end en liste over projekter — alle applikationer kører live på én server, containeriseret med Docker, routet gennem Nginx og deployet via CI/CD pipelines. Infrastrukturen er i sig selv en del af portfolioen."
+    },
+    "skills": {
+        "heading": "Kompetencer & Teknologier",
+        "categories": {
+            "backend": "Backend",
+            "devops": "DevOps",
+            "frontend": "Frontend",
+            "data": "Data & ML",
+            "tools": "Værktøjer & Platforme"
+        }
+    },
+    "projects": {
+        "heading": "Projekter",
+        "liveDemo": "Live Demo",
+        "viewCode": "Se Kode",
+        "learnMore": "Læs Mere"
+    },
+    "experience": {
+        "heading": "Erfaring",
+        "items": [
+            {
+                "title": "IT-drift",
+                "org": "Københavns Kommune",
+                "period": "Nu",
+                "description": "Linux-serveradministration, automatisering og infrastrukturstyring for kommunale IT-systemer."
+            },
+            {
+                "title": "Datamatiker",
+                "org": "KEA — Københavns Erhvervsakademi",
+                "period": "2024 – 2026",
+                "description": "Full-stack udvikling med Java, Spring Boot, databaser og softwarearkitektur. I gang med 4. semester."
+            }
+        ]
+    },
+    "contact": {
+        "heading": "Kontakt",
+        "text": "Interesseret i at samarbejde eller bare sige hej? Du er velkommen til at skrive.",
+        "email": "Email",
+        "form": {
+            "name": "Navn",
+            "email": "Email",
+            "message": "Besked",
+            "send": "Send Besked"
+        }
     }
 }

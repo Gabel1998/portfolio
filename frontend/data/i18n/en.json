@@ -16,5 +16,55 @@
             "linkedin": "LinkedIn",
             "cv": "Download CV"
         }
+    },
+    "about": {
+        "heading": "About Me",
+        "p1": "I'm a 4th semester Computer Science (Datamatiker) student at KEA in Copenhagen, with a passion for building software that solves real problems.",
+        "p2": "I currently work in IT Operations at Københavns Kommune, focusing on Linux server administration, automation, and municipal IT infrastructure.",
+        "p3": "This portfolio is more than a list of projects — every application you see here is running live on a single server, containerized with Docker, routed through Nginx, and deployed via CI/CD pipelines. The infrastructure itself is part of the portfolio."
+    },
+    "skills": {
+        "heading": "Skills & Technologies",
+        "categories": {
+            "backend": "Backend",
+            "devops": "DevOps",
+            "frontend": "Frontend",
+            "data": "Data & ML",
+            "tools": "Tools & Platforms"
+        }
+    },
+    "projects": {
+        "heading": "Projects",
+        "liveDemo": "Live Demo",
+        "viewCode": "View Code",
+        "learnMore": "Learn More"
+    },
+    "experience": {
+        "heading": "Experience",
+        "items": [
+            {
+                "title": "IT Operations",
+                "org": "Københavns Kommune",
+                "period": "Present",
+                "description": "Linux server administration, automation, and infrastructure management for municipal IT systems."
+            },
+            {
+                "title": "Computer Science (Datamatiker)",
+                "org": "KEA — Copenhagen School of Design and Technology",
+                "period": "2024 – 2026",
+                "description": "Full-stack development with Java, Spring Boot, databases, and software architecture. Currently in 4th semester."
+            }
+        ]
+    },
+    "contact": {
+        "heading": "Get in Touch",
+        "text": "Interested in working together or just want to say hello? Feel free to reach out.",
+        "email": "Email",
+        "form": {
+            "name": "Name",
+            "email": "Email",
+            "message": "Message",
+            "send": "Send Message"
+        }
     }
 }
