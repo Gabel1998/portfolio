@@ -92,7 +92,7 @@ jobs:
 
       - name: Check health endpoint
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://andreasgabel.dk/api/health || true)
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.DROPLET_HOST }}/api/health || true)
           if [ "$STATUS" = "200" ]; then
             echo "Health check passed (HTTP $STATUS)"
           else
