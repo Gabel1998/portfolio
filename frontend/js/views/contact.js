@@ -14,7 +14,7 @@ const Contact = (() => {
                 <div class="contact__links">
                     <a href="mailto:Andreassgabel@hotmail.com?subject=Hello%20Andreas" class="btn btn--primary" data-i18n="contact.email">${I18n.t('contact.email')}</a>
                     <a href="https://github.com/gabel1998" target="_blank" rel="noopener" class="btn btn--primary">GitHub</a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener" class="btn btn--primary">LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/andreas-søgaard-gabel-758991133" target="_blank" rel="noopener" class="btn btn--primary">LinkedIn</a>
                 </div>
             </div>
         `;

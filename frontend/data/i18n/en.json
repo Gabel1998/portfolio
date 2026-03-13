@@ -86,12 +86,6 @@
     "contact": {
         "heading": "Get in Touch",
         "text": "Interested in working together or just want to say hello? Feel free to reach out.",
-        "email": "Email",
-        "form": {
-            "name": "Name",
-            "email": "Email",
-            "message": "Message",
-            "send": "Send Message"
-        }
+        "email": "Email"
     }
 }

@@ -12,7 +12,7 @@ const Footer = (() => {
                     <span class="footer__copy">&copy; ${year} Andreas Gabel</span>
                     <div class="footer__links">
                         <a href="https://github.com/gabel1998" target="_blank" rel="noopener" class="footer__link">GitHub</a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener" class="footer__link">LinkedIn</a>
+                        <a href="https://www.linkedin.com/in/andreas-søgaard-gabel-758991133" target="_blank" rel="noopener" class="footer__link">LinkedIn</a>
                     </div>
                 </div>
             </div>

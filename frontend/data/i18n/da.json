@@ -86,12 +86,6 @@
     "contact": {
         "heading": "Kontakt",
         "text": "Interesseret i at samarbejde eller bare sige hej? Du er velkommen til at skrive.",
-        "email": "Email",
-        "form": {
-            "name": "Navn",
-            "email": "Email",
-            "message": "Besked",
-            "send": "Send Besked"
-        }
+        "email": "Email"
     }
 }
