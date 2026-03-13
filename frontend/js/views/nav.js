@@ -1,4 +1,4 @@
-Det import I18n from '../modules/i18n.js';
+import I18n from '../modules/i18n.js';
 
 const Nav = (() => {
     const sections = ['about', 'skills', 'projects', 'experience', 'contact'];
