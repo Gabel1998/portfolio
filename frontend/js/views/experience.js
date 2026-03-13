@@ -41,11 +41,13 @@ const Experience = (() => {
                         <div class="timeline__extra" id="timeline-extra" style="display: none;">
                             ${hidden.map(renderItem).join('')}
                         </div>
-                        <button class="timeline__toggle btn btn--outline" id="timeline-toggle" data-i18n="experience.showMore">
-                            ${I18n.t('experience.showMore')}
-                        </button>
                     ` : ''}
                 </div>
+                ${hidden.length ? `
+                    <button class="timeline__toggle btn btn--outline" id="timeline-toggle" data-i18n="experience.showMore">
+                        ${I18n.t('experience.showMore')}
+                    </button>
+                ` : ''}
             </div>
         `;
 

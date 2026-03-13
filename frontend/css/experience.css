@@ -9,9 +9,8 @@
 
 .timeline__labels {
     display: flex;
-    justify-content: center;
-    gap: var(--space-xl);
-    margin-bottom: var(--space-lg);
+    max-width: 900px;
+    margin: 0 auto var(--space-lg);
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -20,13 +19,13 @@
 }
 
 .timeline__label--work {
-    text-align: right;
-    width: calc(50% - var(--space-lg));
+    width: 50%;
+    text-align: center;
 }
 
 .timeline__label--edu {
-    text-align: left;
-    width: calc(50% - var(--space-lg));
+    width: 50%;
+    text-align: center;
 }
 
 .timeline {
@@ -114,7 +113,7 @@
 
 .timeline__toggle {
     display: block;
-    margin: var(--space-lg) auto 0;
+    margin: var(--space-xl) auto 0;
     font-size: 0.9rem;
 }
 
