@@ -109,11 +109,11 @@ jobs:
     needs: deploy
     steps:
       - name: Wait for services to start
-        run: sleep 30
+        run: sleep 60
 
       - name: Check health endpoint
         run: |
-          STATUS=$(curl -sL -o /dev/null -w "%{http_code}" http://${{ secrets.DROPLET_HOST }}/api/health || true)
+          STATUS=$(curl -skL -o /dev/null -w "%{http_code}" https://${{ secrets.DROPLET_HOST }}/api/health || true)
           if [ "$STATUS" = "200" ]; then
             echo "Health check passed (HTTP $STATUS)"
           else
