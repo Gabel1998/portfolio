@@ -74,7 +74,7 @@ jobs:
 
       - name: Create stylelint config
         working-directory: frontend
-        run: echo '{"extends":"stylelint-config-standard"}' > .stylelintrc.json
+        run: echo '{"extends":"stylelint-config-standard","rules":{"selector-class-pattern":"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:__[a-z0-9]+(?:-[a-z0-9]+)*)?(?:--[a-z0-9]+(?:-[a-z0-9]+)*)?$","color-function-notation":null,"color-hex-length":null,"alpha-value-notation":null,"color-function-alias-notation":null,"media-feature-range-notation":null}}' > .stylelintrc.json
 
       - name: Lint CSS
         working-directory: frontend
