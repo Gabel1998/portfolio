@@ -73,6 +73,8 @@ jobs:
           script: |
             cd /opt/portfolio
 
+            git pull origin main
+
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u Gabel1998 --password-stdin
 
             docker compose pull
@@ -89,11 +91,11 @@ jobs:
     needs: deploy
     steps:
       - name: Wait for services to start
-        run: sleep 15
+        run: sleep 30
 
       - name: Check health endpoint
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.DROPLET_HOST }}/api/health || true)
+          STATUS=$(curl -sL -o /dev/null -w "%{http_code}" http://${{ secrets.DROPLET_HOST }}/api/health || true)
           if [ "$STATUS" = "200" ]; then
             echo "Health check passed (HTTP $STATUS)"
           else
