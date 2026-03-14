@@ -100,7 +100,7 @@ jobs:
     needs: deploy
     steps:
       - name: Wait for services to start
-        run: sleep 60
+        run: sleep 90
 
       - name: Check health endpoint
         run: |
