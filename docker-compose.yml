@@ -3,11 +3,14 @@ services:
     image: nginx:alpine
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - portfolio-frontend
       - portfolio-backend
+    restart: unless-stopped
     networks:
       - frontend
 
