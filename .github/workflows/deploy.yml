@@ -71,17 +71,27 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            cd /opt/portfolio
-
             # Ensure repo is cloned for config files (docker-compose.yml, nginx, workflows)
-            if [ ! -d ".git" ]; then
-              cd /opt
-              rm -rf portfolio
-              git clone https://github.com/Gabel1998/portfolio.git portfolio
-              cd portfolio
+            if [ ! -d "/opt/portfolio/.git" ]; then
+              git clone https://Gabel1998:${{ secrets.GHCR_TOKEN }}@github.com/Gabel1998/portfolio.git /opt/portfolio-repo
+              # Copy config files into existing portfolio dir (preserve any local state)
+              mkdir -p /opt/portfolio
+              cp /opt/portfolio-repo/docker-compose.yml /opt/portfolio/
+              cp -r /opt/portfolio-repo/nginx /opt/portfolio/
+              cp -r /opt/portfolio-repo/.github /opt/portfolio/
+              # Initialize as git repo for future pulls
+              cd /opt/portfolio
+              git init
+              git remote add origin https://Gabel1998:${{ secrets.GHCR_TOKEN }}@github.com/Gabel1998/portfolio.git
+              git fetch origin main
+              git reset --hard origin/main
+              rm -rf /opt/portfolio-repo
             else
+              cd /opt/portfolio
               git pull origin main
             fi
+
+            cd /opt/portfolio
 
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u Gabel1998 --password-stdin
 
