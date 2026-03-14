@@ -81,7 +81,10 @@ jobs:
 
       - name: Create ESLint config
         working-directory: frontend
-        run: echo '{"env":{"browser":true,"es2021":true},"rules":{"no-unused-vars":"warn","no-undef":"warn"}}' > .eslintrc.json
+        run: |
+          cat > eslint.config.js << 'ESLINTEOF'
+          export default [{ languageOptions: { globals: { window: "readonly", document: "readonly", console: "readonly", fetch: "readonly", location: "readonly", setTimeout: "readonly", clearTimeout: "readonly", HTMLElement: "readonly", customElements: "readonly", navigator: "readonly", requestAnimationFrame: "readonly", cancelAnimationFrame: "readonly", IntersectionObserver: "readonly", MutationObserver: "readonly", URLSearchParams: "readonly" }, ecmaVersion: 2021, sourceType: "module" }, rules: { "no-unused-vars": "warn" } }];
+          ESLINTEOF
 
       - name: Lint JavaScript
         working-directory: frontend
