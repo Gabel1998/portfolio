@@ -182,15 +182,63 @@
             `;
         }
 
+        function categorizeJob(job) {
+            const name = (job.name || job.id || '').toLowerCase();
+            const steps = (job.steps || []).map(s => s.toLowerCase()).join(' ');
+            const all = name + ' ' + steps;
+
+            if (all.includes('health') || all.includes('monitor') || all.includes('uptime'))
+                return 'cf';
+            if (all.includes('deploy') || all.includes('ssh'))
+                return 'deployment';
+            if (all.includes('push to ghcr') || all.includes('push images') || all.includes('ghcr') || (all.includes('push') && all.includes('image')))
+                return 'delivery';
+            return 'ci';
+        }
+
+        const PHASE_META = {
+            ci:         { label: 'CI — Continuous Integration',  color: '#3B82F6' },
+            delivery:   { label: 'CD — Continuous Delivery',     color: '#8B5CF6' },
+            deployment: { label: 'CD — Continuous Deployment',   color: '#F59E0B' },
+            cf:         { label: 'CF — Continuous Feedback',     color: '#10B981' },
+        };
+
         function renderWorkflow(wf) {
             const triggerText = formatTriggers(wf.triggers);
             const jobs = wf.jobs || [];
 
-            // Determine if this is a deploy-type workflow
-            const hasHealthCheck = jobs.some(j => j.name?.toLowerCase().includes('health'));
-            const hasDeploy = jobs.some(j => j.name?.toLowerCase().includes('deploy'));
-            const resultType = hasDeploy ? 'live' : 'gate';
-            const resultLabel = hasDeploy ? (hasHealthCheck ? 'Verified Live' : 'Deployed') : 'Quality Gate';
+            // Group jobs by phase
+            const phases = { ci: [], delivery: [], deployment: [], cf: [] };
+            jobs.forEach(job => {
+                phases[categorizeJob(job)].push(job);
+            });
+
+            // Render phases that have jobs
+            const phaseOrder = ['ci', 'delivery', 'deployment', 'cf'];
+            const renderedPhases = phaseOrder
+                .filter(p => phases[p].length > 0)
+                .map((phase, pi) => {
+                    const meta = PHASE_META[phase];
+                    const phaseJobs = phases[phase];
+                    return `
+                        ${pi > 0 ? '<div class="cicd__arrow-down"></div>' : ''}
+                        <div class="cicd__phase">
+                            <div class="cicd__phase-label" style="border-left-color: ${meta.color}">
+                                ${meta.label}
+                            </div>
+                            ${phaseJobs.map(job => `
+                                <div class="cicd__job">
+                                    <div class="cicd__job-name">${escapeHtml(job.name || job.id)}</div>
+                                    ${job.environment ? `<div class="cicd__job-env">environment: ${escapeHtml(job.environment)}</div>` : ''}
+                                    ${job.needs?.length ? `<div class="cicd__job-needs">needs: ${job.needs.map(n => escapeHtml(n)).join(', ')}</div>` : ''}
+                                    <div class="cicd__job-steps">
+                                        ${job.steps.map(s => `<div class="cicd__step">${escapeHtml(s)}</div>`).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }).join('');
 
             return `
                 <div class="cicd__workflow">
@@ -200,18 +248,7 @@
                         <div class="cicd__trigger">${triggerText}</div>
                     </div>
                     <div class="cicd__jobs">
-                        ${jobs.map((job, i) => `
-                            ${i > 0 && job.needs?.length ? '<div class="cicd__arrow-down"></div>' : ''}
-                            <div class="cicd__job">
-                                <div class="cicd__job-name">${escapeHtml(job.name || job.id)}</div>
-                                ${job.environment ? `<div class="cicd__job-env">environment: ${escapeHtml(job.environment)}</div>` : ''}
-                                ${job.needs?.length ? `<div class="cicd__job-needs">needs: ${job.needs.map(n => escapeHtml(n)).join(', ')}</div>` : ''}
-                                <div class="cicd__job-steps">
-                                    ${job.steps.map(s => `<div class="cicd__step">${escapeHtml(s)}</div>`).join('')}
-                                </div>
-                            </div>
-                        `).join('')}
-                        <div class="cicd__result cicd__result--${resultType}">${resultLabel}</div>
+                        ${renderedPhases}
                     </div>
                 </div>
             `;
