@@ -23,6 +23,21 @@ jobs:
         working-directory: backend
         run: mvn clean verify -B
 
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: JUnit Test Results
+          path: backend/target/surefire-reports/*.xml
+          reporter: java-junit
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/target/*.jar
+          retention-days: 14
+
   push-images:
     name: Push to GHCR
     runs-on: ubuntu-latest
@@ -57,6 +72,20 @@ jobs:
           tags: |
             ghcr.io/gabel1998/portfolio/frontend:latest
             ghcr.io/gabel1998/portfolio/frontend:${{ github.sha }}
+
+      - name: Scan backend image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/gabel1998/portfolio/backend:${{ github.sha }}
+          format: table
+          severity: CRITICAL,HIGH
+
+      - name: Scan frontend image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/gabel1998/portfolio/frontend:${{ github.sha }}
+          format: table
+          severity: CRITICAL,HIGH
 
   deploy:
     name: Deploy to Server
@@ -104,7 +133,6 @@ jobs:
 
       - name: Check health endpoint
         run: |
-          # Try direct HTTP to the droplet IP (bypasses SSL/domain issues)
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 http://${{ secrets.DROPLET_HOST }}/api/health || true)
           echo "HTTP status: $STATUS"
           if [ "$STATUS" = "200" ] || [ "$STATUS" = "301" ] || [ "$STATUS" = "302" ]; then
