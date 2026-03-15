@@ -87,6 +87,18 @@ services:
     networks:
       - frontend
 
+  # --- Talent API ---
+
+  talent-api:
+    image: ghcr.io/gabel1998/talent-api:latest
+    restart: unless-stopped
+    expose:
+      - "8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+    networks:
+      - frontend
+
   # --- Beskyttelsesrum Showroom ---
 
   beskyttelsesrum:
