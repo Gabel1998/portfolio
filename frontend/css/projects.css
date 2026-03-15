@@ -54,6 +54,33 @@
     color: var(--color-accent);
 }
 
+.project-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.project-card__header .project-card__title {
+    margin-bottom: 0;
+}
+
+.project-card__badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 0.5rem;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.project-card__badge--dev {
+    background-color: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+
 .project-card__links {
     display: flex;
     gap: var(--space-md);

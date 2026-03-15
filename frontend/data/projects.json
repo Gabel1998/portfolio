@@ -38,5 +38,26 @@
         "github": "https://github.com/Gabel1998/beskyttelsesrum",
         "showroomPath": "/beskyttelsesrum",
         "image": null
+    },
+    {
+        "slug": "talent-api",
+        "title": "Talent API",
+        "description": "A REST API for internship applications. Serves structured data about candidates, documents, and projects. Features Swagger UI, i18n, and a polished landing page.",
+        "descriptionDa": "En REST API til praktikansøgninger. Serverer struktureret data om kandidater, dokumenter og projekter. Med Swagger UI, i18n og en poleret landingsside.",
+        "tech": ["Java", "Spring Boot", "Swagger", "Docker", "GitHub Actions"],
+        "github": "https://github.com/Gabel1998/talent-api",
+        "showroomPath": "/talent-api",
+        "status": "in-development",
+        "image": null
+    },
+    {
+        "slug": "monkknows",
+        "title": "MonkKnows",
+        "description": "A collaborative DevOps project. Legacy codebase being modernized with containerization, CI/CD pipelines, and infrastructure automation.",
+        "descriptionDa": "Et samarbejds-DevOps-projekt. Legacy kodebase der moderniseres med containerisering, CI/CD pipelines og infrastruktur-automatisering.",
+        "tech": ["Ruby", "Python", "DevOps", "Docker"],
+        "github": "https://github.com/nasOps/MonkKnows",
+        "status": "in-development",
+        "image": null
     }
 ]

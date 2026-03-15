@@ -21,9 +21,16 @@ const Projects = (() => {
                 ? project.descriptionDa
                 : project.description;
 
+            const statusBadge = project.status === 'in-development'
+                ? `<span class="project-card__badge project-card__badge--dev">${I18n.t('projects.underDevelopment')}</span>`
+                : '';
+
             return `
                 <div class="project-card">
-                    <h3 class="project-card__title">${project.title}</h3>
+                    <div class="project-card__header">
+                        <h3 class="project-card__title">${project.title}</h3>
+                        ${statusBadge}
+                    </div>
                     <p class="project-card__desc">${desc}</p>
                     <div class="project-card__tech">
                         ${project.tech.map(t => `<span class="project-card__tech-tag">${t}</span>`).join('')}
