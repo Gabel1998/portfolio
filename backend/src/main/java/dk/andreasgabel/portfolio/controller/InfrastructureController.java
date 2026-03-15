@@ -53,7 +53,9 @@ public class InfrastructureController {
             new ProjectConfig("Portfolio",       List.of("Gabel1998/portfolio")),
             new ProjectConfig("Raid Fines",      List.of("Gabel1998/raid-fines")),
             new ProjectConfig("Web Crawler",     List.of("Gabel1998/webCrawler", "Gabel1998/webcrawler-frontend")),
-            new ProjectConfig("Beskyttelsesrum", List.of("Gabel1998/beskyttelsesrum"))
+            new ProjectConfig("Beskyttelsesrum", List.of("Gabel1998/beskyttelsesrum")),
+            new ProjectConfig("Talent API",      List.of("Gabel1998/talent-api")),
+            new ProjectConfig("MonkKnows",       List.of("nasOps/MonkKnows"))
     );
 
     // Branches to check for workflow files (in order of priority)
@@ -374,13 +376,14 @@ public class InfrastructureController {
         projectSvcs.put("Raid Fines", new String[]{"raidfines-frontend", "raidfines-backend"});
         projectSvcs.put("Web Crawler", new String[]{"webcrawler-frontend", "webcrawler-backend", "selenium-chrome"});
         projectSvcs.put("Beskyttelsesrum", new String[]{"beskyttelsesrum"});
+        projectSvcs.put("Talent API", new String[]{"talent-api"});
 
-        Map<String, String> groupColors = Map.of(
-            "Portfolio Site", "#DBEAFE",
-            "Raid Fines", "#DCFCE7",
-            "Web Crawler", "#FFF7ED",
-            "Beskyttelsesrum", "#F3E8FF"
-        );
+        Map<String, String> groupColors = new LinkedHashMap<>();
+        groupColors.put("Portfolio Site", "#DBEAFE");
+        groupColors.put("Raid Fines", "#DCFCE7");
+        groupColors.put("Web Crawler", "#FFF7ED");
+        groupColors.put("Beskyttelsesrum", "#F3E8FF");
+        groupColors.put("Talent API", "#FEF3C7");
 
         // Database info per backend
         Map<String, String[]> dbInfo = new LinkedHashMap<>();
@@ -421,7 +424,7 @@ public class InfrastructureController {
                 String type = sName.contains("frontend") ? "frontend" :
                              sName.contains("backend") ? "backend" :
                              sName.equals("selenium-chrome") ? "browser engine" :
-                             sName.equals("beskyttelsesrum") ? "full-stack" : "service";
+                             sName.equals("beskyttelsesrum") || sName.equals("talent-api") ? "full-stack" : "service";
 
                 List<?> expose = (List<?>) cfg.getOrDefault("expose", List.of());
                 List<?> ports = (List<?>) cfg.getOrDefault("ports", List.of());
