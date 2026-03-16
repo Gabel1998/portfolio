@@ -90,7 +90,7 @@ services:
   # --- Talent API ---
 
   talent-api:
-    image: ghcr.io/gabel1998/talent-api:sha-bce12a567b2fb6bef723613c7995abbb4b5989e5
+    image: ghcr.io/gabel1998/talent-api:sha-95c5265137530e7faf8c968353a184463251c1b6
     restart: unless-stopped
     expose:
       - "8080"
