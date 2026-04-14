@@ -25,8 +25,13 @@ const Projects = (() => {
                 ? `<span class="project-card__badge project-card__badge--dev">${I18n.t('projects.underDevelopment')}</span>`
                 : '';
 
+            const imageHtml = project.image
+                ? `<div class="project-card__image"><img src="${project.image}" alt="${project.title}" loading="lazy"></div>`
+                : '';
+
             return `
                 <div class="project-card">
+                    ${imageHtml}
                     <div class="project-card__header">
                         <h3 class="project-card__title">${project.title}</h3>
                         ${statusBadge}

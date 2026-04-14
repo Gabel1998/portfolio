@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Insolvens Intelligence — Hybrid RAG system combining graph and vector search for insolvency law research.">
+    <title>Insolvens Intelligence — Andreas Gabel</title>
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/infrastructure.css">
+    <style>
+        .showcase__hero-img {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: var(--space-xl);
+            display: flex;
+            justify-content: center;
+            padding: var(--space-lg);
+        }
+
+        .showcase__hero-img img {
+            max-width: 600px;
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            display: block;
+            border-radius: var(--radius-md);
+        }
+
+        .showcase__workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-md);
+        }
+
+        .showcase__workflow-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .showcase__workflow-card img {
+            width: 100%;
+            display: block;
+        }
+
+        .showcase__workflow-caption {
+            padding: var(--space-sm) var(--space-md);
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .showcase__workflow-caption strong {
+            color: var(--color-text-primary);
+        }
+
+        .showcase__stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .showcase__stat {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            text-align: center;
+        }
+
+        .showcase__stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            font-family: var(--font-mono);
+        }
+
+        .showcase__stat-label {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .showcase__badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 0.5rem;
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            background-color: #FEF3C7;
+            color: #92400E;
+            border: 1px solid #FDE68A;
+            margin-left: 0.75rem;
+            vertical-align: middle;
+        }
+
+        .showcase__node-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .showcase__node-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+        }
+
+        .showcase__node-card h3 {
+            font-size: 0.9rem;
+            font-family: var(--font-mono);
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .showcase__node-prop {
+            font-size: 0.78rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 0.2rem;
+        }
+
+        .showcase__node-key {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--color-text-secondary);
+            opacity: 0.7;
+        }
+
+        .showcase__stack-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+        }
+
+        .showcase__stack-grid--bottom {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            max-width: 75%;
+            margin: var(--space-md) auto 0;
+        }
+
+        @media (max-width: 768px) {
+            .showcase__stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .showcase__node-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 100%;
+            }
+            .showcase__stack-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .showcase__stack-grid--bottom {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 100%;
+            }
+            .showcase__workflow-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="infra">
+        <div class="container">
+            <a href="/" class="infra__back">&larr; Back to portfolio</a>
+
+            <h1>Insolvens Intelligence <span class="showcase__badge">Under Development</span></h1>
+            <p class="infra__subtitle">
+                A hybrid RAG system for insolvency law research. Combines graph-RAG (company ownership from CVR) with vector-RAG (Danish court rulings) and transaction analysis — powered by an AI agent in n8n with 7 specialized tools.
+            </p>
+
+            <!-- Graph Visualization -->
+            <div class="showcase__hero-img">
+                <img src="/assets/images/projects/insolvens-graph.png" alt="Neo4j graph visualization of company ownership structures and court rulings">
+            </div>
+
+            <!-- Key Numbers -->
+            <div class="showcase__stat-grid">
+                <div class="showcase__stat">
+                    <div class="showcase__stat-value">61</div>
+                    <div class="showcase__stat-label">Companies</div>
+                </div>
+                <div class="showcase__stat">
+                    <div class="showcase__stat-value">989</div>
+                    <div class="showcase__stat-label">Court Rulings</div>
+                </div>
+                <div class="showcase__stat">
+                    <div class="showcase__stat-value">46k+</div>
+                    <div class="showcase__stat-label">Embedded Chunks</div>
+                </div>
+                <div class="showcase__stat">
+                    <div class="showcase__stat-value">7</div>
+                    <div class="showcase__stat-label">Agent Tools</div>
+                </div>
+            </div>
+
+            <!-- Neo4j Data Model -->
+            <div class="infra__section">
+                <h2>Neo4j Data Model</h2>
+                <p style="font-size:0.85rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">
+                    Neo4j serves as both graph database (ownership structures, case relations) and vector store (768-dim embeddings for semantic search).
+                </p>
+
+                <h3 style="font-size:1rem;margin-bottom:var(--space-sm);color:var(--color-text-primary);">Nodes</h3>
+                <div class="showcase__node-grid" style="margin-bottom:var(--space-lg);">
+                    <div class="showcase__node-card">
+                        <h3>Selskab</h3>
+                        <div class="showcase__node-key">key: cvr_nummer</div>
+                        <div class="showcase__node-prop">navn, virksomhedsform, status, branche</div>
+                    </div>
+                    <div class="showcase__node-card">
+                        <h3>Person</h3>
+                        <div class="showcase__node-key">key: enhedsnummer</div>
+                        <div class="showcase__node-prop">navn</div>
+                    </div>
+                    <div class="showcase__node-card">
+                        <h3>Sag</h3>
+                        <div class="showcase__node-key">key: sags_id</div>
+                        <div class="showcase__node-prop">titel, type, dato, myndighed</div>
+                    </div>
+                    <div class="showcase__node-card">
+                        <h3>Afg&oslash;relse</h3>
+                        <div class="showcase__node-key">key: afgoerelses_id</div>
+                        <div class="showcase__node-prop">dato, instans, headline, url</div>
+                    </div>
+                    <div class="showcase__node-card">
+                        <h3>Chunk</h3>
+                        <div class="showcase__node-key">key: chunk_id</div>
+                        <div class="showcase__node-prop">tekst, embedding (768-dim), kilde_url</div>
+                    </div>
+                    <div class="showcase__node-card">
+                        <h3>Konto</h3>
+                        <div class="showcase__node-key">key: kontonr + session_id</div>
+                        <div class="showcase__node-prop">navn</div>
+                    </div>
+                </div>
+
+                <h3 style="font-size:1rem;margin-bottom:var(--space-sm);color:var(--color-text-primary);">Relations</h3>
+                <div class="infra__diagram">
+                    <table class="infra__table">
+                        <thead>
+                            <tr>
+                                <th>Relation</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>EJER</td><td>Selskab / Person</td><td>Selskab</td><td>Ownership</td></tr>
+                            <tr><td>ER_DIREKT&Oslash;R_I</td><td>Person</td><td>Selskab</td><td>Management</td></tr>
+                            <tr><td>INVOLVERET_I</td><td>Selskab</td><td>Sag</td><td>Party in case</td></tr>
+                            <tr><td>AFG&Oslash;R</td><td>Afg&oslash;relse</td><td>Sag</td><td>Ruling in case</td></tr>
+                            <tr><td>HAR_CHUNK</td><td>Afg&oslash;relse</td><td>Chunk</td><td>Text chunks with embeddings</td></tr>
+                            <tr><td>OVERF&Oslash;RSEL</td><td>Konto</td><td>Konto</td><td>Money transfer</td></tr>
+                            <tr><td>TILH&Oslash;RER</td><td>Konto</td><td>Selskab</td><td>Account belongs to company</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- AI Agent Tools -->
+            <div class="infra__section">
+                <h2>AI Agent Tools</h2>
+                <p style="font-size:0.85rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">
+                    The agent uses hybrid scoring: <code style="font-size:0.8rem;background:var(--color-surface);padding:0.1rem 0.3rem;border-radius:var(--radius-sm);">hybrid_score = vector_similarity + graf_boost(+0.05) + entity_boost(+0.03)</code>
+                </p>
+                <div class="infra__diagram">
+                    <table class="infra__table">
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>cvr_graf</td><td>Research</td><td>Company structure, ownership, management via CVR</td></tr>
+                            <tr><td>vektor_soegning</td><td>Research</td><td>Hybrid search: vector similarity + graph boost</td></tr>
+                            <tr><td>sags_graf</td><td>Research</td><td>Cases, co-parties, group connections</td></tr>
+                            <tr><td>domsdatabasen_soeg</td><td>Research</td><td>Live search in domsdatabasen.dk</td></tr>
+                            <tr><td>transaktions_graf</td><td>Research</td><td>Money flows, circular pattern detection</td></tr>
+                            <tr><td>ingest_cvr</td><td>Ingest</td><td>Add company on-demand</td></tr>
+                            <tr><td>ingest_afgoerelser</td><td>Ingest</td><td>Fetch new rulings on-demand</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- n8n Workflows -->
+            <div class="infra__section">
+                <h2>n8n Workflows</h2>
+                <p style="font-size:0.85rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">
+                    All orchestration runs through n8n — from data ingestion to the AI agent itself.
+                </p>
+                <div class="showcase__workflow-grid">
+                    <div class="showcase__workflow-card">
+                        <img src="/assets/images/projects/insolvens-agent-workflow.png" alt="AI Agent workflow in n8n" loading="lazy">
+                        <div class="showcase__workflow-caption">
+                            <strong>WF-C: AI Agent</strong> — Chat trigger with 7 tools, hybrid search, and multi-agent evaluation
+                        </div>
+                    </div>
+                    <div class="showcase__workflow-card">
+                        <img src="/assets/images/projects/insolvens-rag-pipeline.png" alt="RAG ingest pipeline in n8n" loading="lazy">
+                        <div class="showcase__workflow-caption">
+                            <strong>WF-B: RAG Ingest</strong> — Fetch rulings, extract text, chunk, embed via Ollama, store in Neo4j
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stack -->
+            <div class="infra__section">
+                <h2>Stack</h2>
+                <div class="showcase__stack-grid">
+                    <div class="infra__svc-card">
+                        <h3>n8n</h3>
+                        <p class="infra__svc-detail">Workflow orchestration</p>
+                        <p class="infra__svc-detail">7 workflows, Docker</p>
+                    </div>
+                    <div class="infra__svc-card">
+                        <h3>Neo4j</h3>
+                        <p class="infra__svc-detail">Graph + Vector database</p>
+                        <p class="infra__svc-detail">APOC, Cypher, cosine index</p>
+                    </div>
+                    <div class="infra__svc-card">
+                        <h3>Ollama</h3>
+                        <p class="infra__svc-detail">Local embeddings</p>
+                        <p class="infra__svc-detail">nomic-embed-text (768-dim)</p>
+                    </div>
+                    <div class="infra__svc-card">
+                        <h3>LM Studio</h3>
+                        <p class="infra__svc-detail">Local LLM inference</p>
+                        <p class="infra__svc-detail">Qwen2.5-7B-Instruct</p>
+                    </div>
+                </div>
+                <div class="showcase__stack-grid--bottom">
+                    <div class="infra__svc-card">
+                        <h3>Python</h3>
+                        <p class="infra__svc-detail">Batch ingest scripts</p>
+                        <p class="infra__svc-detail">Entity extraction, enrichment</p>
+                    </div>
+                    <div class="infra__svc-card">
+                        <h3>cvrapi.dk</h3>
+                        <p class="infra__svc-detail">Company data source</p>
+                        <p class="infra__svc-detail">Ownership, management, status</p>
+                    </div>
+                    <div class="infra__svc-card">
+                        <h3>domsdatabasen.dk</h3>
+                        <p class="infra__svc-detail">Court rulings source</p>
+                        <p class="infra__svc-detail">989 rulings, full text</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

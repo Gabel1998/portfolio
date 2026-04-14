@@ -51,6 +51,17 @@
         "image": null
     },
     {
+        "slug": "insolvens-intelligence",
+        "title": "Insolvens Intelligence",
+        "description": "A hybrid RAG system for insolvency law research. Combines graph-RAG (company ownership structures from CVR) with vector-RAG (Danish court rulings) and transaction analysis via an AI agent in n8n. Neo4j serves as both graph and vector database — 61 companies, 989 rulings, and 46,000+ embedded chunks.",
+        "descriptionDa": "Et hybrid RAG-system til insolvensretlig research. Kombinerer graf-RAG (ejerskabsstrukturer fra CVR) med vektor-RAG (danske domstolsafgørelser) og transaktionsanalyse via en AI-agent i n8n. Neo4j fungerer som både graf- og vektordatabase — 61 selskaber, 989 afgørelser og 46.000+ embeddede chunks.",
+        "tech": ["n8n", "Neo4j", "Ollama", "Python", "RAG", "Graph DB"],
+        "github": "https://github.com/Gabel1998/insolvens-intelligence",
+        "showroomPath": "/insolvens-intelligence.html",
+        "status": "in-development",
+        "image": null
+    },
+    {
         "slug": "monkknows",
         "title": "MonkKnows",
         "description": "A collaborative DevOps project. Legacy codebase being modernized with containerization, CI/CD pipelines, and infrastructure automation.",
