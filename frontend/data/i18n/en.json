@@ -9,8 +9,8 @@
     "hero": {
         "greeting": "Hi, I'm",
         "name": "Andreas Gabel",
-        "title": "Datamatiker · IT Operations · Developer",
-        "tagline": "Building real applications, not just descriptions. Every project on this site is live and interactive.",
+        "title": "Datamatiker · DevOps · Infrastructure & Network",
+        "tagline": "Removing friction, not just writing code. Every project on this site is containerized, automated, and running live.",
         "cta": {
             "github": "GitHub",
             "linkedin": "LinkedIn",
@@ -19,9 +19,9 @@
     },
     "about": {
         "heading": "About Me",
-        "p1": "I'm a 4th semester Computer Science (Datamatiker) student at EK (Erhvervsakademi København) in Copenhagen, with a passion for building software that solves real problems.",
-        "p2": "I work in the Borgerservice Udvikling department at Københavns Kommune, managing IT infrastructure and Linux environments across 7 locations and contributing to the automation of internal processes.",
-        "p3": "This portfolio is more than a list of projects — every application you see here is running live on a single server, containerized with Docker, routed through Nginx, and deployed via CI/CD pipelines. The infrastructure itself is part of the portfolio."
+        "p1": "I'm a 4th semester Computer Science (Datamatiker) student at EK in Copenhagen, focused on DevOps, automation, and infrastructure — not as theory, but as something that solves real problems for real people.",
+        "p2": "I work in IT Operations at Københavns Kommune, managing Linux-based clients, Windows workstations, networking, and infrastructure across 7 citizen service locations. That has taught me what it means to have systems in production — with real users, real consequences, and very little margin for error.",
+        "p3": "This portfolio is more than a list of projects — every application runs live on a single server, containerized with Docker, routed through Nginx, deployed via CI/CD pipelines, and scanned with Trivy. The infrastructure itself is part of the portfolio."
     },
     "skills": {
         "heading": "Skills & Technologies",
@@ -48,18 +48,18 @@
         "eduLabel": "Education",
         "items": [
             {
-                "title": "IT Operations",
+                "title": "IT Operations & Infrastructure",
                 "org": "Københavns Kommune",
                 "period": "Present",
                 "type": "work",
-                "description": "Managing IT infrastructure and Linux environments across 7 citizen service locations. Hardware setup, patch panels, and workstations. Contributing to the automation of internal processes and setting up test environments."
+                "description": "Managing Linux-based clients, Windows workstations, and network infrastructure across 7 citizen service locations. Patch panels, switching, hardware provisioning, and test environments. Automating internal processes and removing friction from daily operations."
             },
             {
                 "title": "Computer Science (Datamatiker)",
                 "org": "EK — Erhvervsakademi København",
                 "period": "2024 – 2026",
                 "type": "education",
-                "description": "Full-stack development with Java, Spring Boot, databases, and software architecture. Currently in 4th semester."
+                "description": "Software development with Java, Spring Boot, and databases — with a personal focus on DevOps, CI/CD, containerization, and infrastructure automation. Currently in 4th semester."
             },
             {
                 "title": "Teacher — Special Needs Education",
