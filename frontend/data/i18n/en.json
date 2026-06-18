@@ -10,7 +10,7 @@
         "greeting": "Hi, I'm",
         "name": "Andreas Gabel",
         "title": "Datamatiker · DevOps · Infrastructure & Network",
-        "tagline": "Removing friction, not just writing code. Every project on this site is containerized, automated, and running live.",
+        "tagline": "Removing friction, not just writing code. Most projects here run as live, containerized services on a single server I operate, deploy, and document end-to-end.",
         "cta": {
             "github": "GitHub",
             "linkedin": "LinkedIn",
@@ -21,7 +21,7 @@
         "heading": "About Me",
         "p1": "I'm a 4th semester Computer Science (Datamatiker) student at EK in Copenhagen, focused on DevOps, automation, and infrastructure — not as theory, but as something that solves real problems for real people.",
         "p2": "I work in IT Operations at Københavns Kommune, managing Linux-based clients, Windows workstations, networking, and infrastructure across 7 citizen service locations. That has taught me what it means to have systems in production — with real users, real consequences, and very little margin for error.",
-        "p3": "This portfolio is more than a list of projects — every application runs live on a single server, containerized with Docker, routed through Nginx, deployed via CI/CD pipelines, and scanned with Trivy. The infrastructure itself is part of the portfolio."
+        "p3": "This portfolio is more than a list of projects — most applications run live on a single server, containerized with Docker, routed through Nginx, deployed via CI/CD pipelines, and scanned with Trivy. The infrastructure itself is part of the portfolio."
     },
     "skills": {
         "heading": "Skills & Technologies",
