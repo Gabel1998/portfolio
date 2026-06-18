@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!--
+      The infrastructure-introspection endpoint parses untrusted external input
+      (docker-compose.yml, nginx.conf, GitHub Actions YAML, GitHub API responses).
+      It intentionally degrades gracefully: broad catches and skipped-on-error
+      files keep one bad source from failing the whole request. These patterns
+      are deliberate here, so they are excluded — any *other* SpotBugs finding
+      still fails the build (failOnError=true).
+    -->
+    <Match>
+        <Class name="dk.andreasgabel.portfolio.controller.InfrastructureController"/>
+        <Or>
+            <Bug pattern="REC_CATCH_EXCEPTION"/>
+            <Bug pattern="DE_MIGHT_IGNORE"/>
+        </Or>
+    </Match>
+</FindBugsFilter>

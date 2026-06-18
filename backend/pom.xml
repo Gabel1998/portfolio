@@ -83,7 +83,9 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.8.3.1</version>
                 <configuration>
-                    <failOnError>false</failOnError>
+                    <failOnError>true</failOnError>
+                    <threshold>Medium</threshold>
+                    <excludeFilterFile>${project.basedir}/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
                 <executions>
                     <execution>
