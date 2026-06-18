@@ -1,0 +1,13 @@
+# Copy to terraform.tfvars and fill in. terraform.tfvars is gitignored (it holds your token).
+# Alternatively, export the token instead of putting it here:  export TF_VAR_do_token=dop_v1_...
+
+do_token     = "dop_v1_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+ssh_key_name = "my-laptop" # name of an SSH key already present in your DO account
+
+# These MUST match the existing droplet before you import, or `terraform plan`
+# will propose a destructive recreate. Check the real values in the DO console.
+region       = "fra1"
+droplet_size = "s-2vcpu-4gb"
+
+# Recommended: restrict SSH to your own IP(s) instead of the whole internet.
+# ssh_allowed_cidrs = ["203.0.113.4/32"]
