@@ -18,7 +18,7 @@
 
             <h1>Infrastructure</h1>
             <p class="infra__subtitle">
-                This portfolio runs on a single DigitalOcean droplet. Every project is containerized, routed through Nginx, and deployed via CI/CD. This page is auto-generated from the live configuration.
+                This portfolio runs on a single DigitalOcean droplet. Most projects are containerized, routed through Nginx, and deployed via CI/CD — and the platform monitors itself. This page is auto-generated from the live configuration.
             </p>
 
             <!-- Deployment Diagram (PlantUML, auto-generated) -->
@@ -39,6 +39,18 @@
                 <div class="cicd" id="pipeline-container">
                     <p style="color: var(--color-text-secondary);">Loading pipeline data from GitHub...</p>
                 </div>
+            </div>
+
+            <!-- Observability -->
+            <div class="infra__section">
+                <h2>Observability</h2>
+                <p style="font-size:0.85rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">
+                    The platform monitors itself. Prometheus scrapes container metrics (cAdvisor), host metrics (node-exporter) and the Spring Boot backend (Micrometer / Actuator); alert rules are evaluated and routed through Alertmanager; Grafana renders it live. The whole stack is defined as code under <code style="font-size:0.8rem;">monitoring/</code>.
+                </p>
+                <a href="/grafana/" target="_blank" rel="noopener"
+                   style="display:inline-block;padding:0.6rem 1.2rem;background:var(--color-accent);color:#fff;border-radius:var(--radius-md);text-decoration:none;font-weight:600;">
+                    View the live Grafana dashboard &rarr;
+                </a>
             </div>
 
             <!-- Nginx Routing (auto-generated) -->

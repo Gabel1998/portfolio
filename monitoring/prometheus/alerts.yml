@@ -1,0 +1,32 @@
+groups:
+  - name: portfolio-platform
+    rules:
+      - alert: BackendDown
+        expr: up{job="portfolio-backend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Portfolio backend is down"
+          description: "Prometheus has not scraped portfolio-backend for over 2 minutes."
+
+      - alert: HighContainerMemory
+        expr: |
+          container_spec_memory_limit_bytes{name!=""} > 0
+          and
+          container_memory_usage_bytes{name!=""} / container_spec_memory_limit_bytes{name!=""} > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container {{ $labels.name }} memory above 90%"
+          description: "{{ $labels.name }} has used more than 90% of its memory limit for 5 minutes."
+
+      - alert: DropletDiskSpaceLow
+        expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} < 0.15
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space on the droplet"
+          description: "Less than 15% disk space remaining on the root filesystem."
