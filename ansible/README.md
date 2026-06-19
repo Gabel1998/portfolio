@@ -83,6 +83,40 @@ location already in `nginx.conf`. For it to work end to end:
 > recommended webroot configuration. Verify it with `--dry-run` before relying on
 > it. Nothing here deletes or rewrites your current certificate.
 
+## Backups (restic → DigitalOcean Space)
+
+A nightly `systemd` timer runs restic, backing up `/etc/letsencrypt` and the
+Docker volumes to a DigitalOcean Space, keeping 7 daily + 4 weekly snapshots. On
+success it writes `backup_last_success_timestamp_seconds` to the node-exporter
+textfile collector, which the **BackupStale** Prometheus alert watches (fires if
+there's been no successful backup in over 26 hours).
+
+### Set it up
+
+1. In the DO console, create a **Space** and a pair of **Spaces access keys**, and
+   set `backup_s3_region` / `backup_s3_bucket` in `group_vars/all.yml` to match.
+2. Provide the secrets (kept out of git):
+   ```bash
+   cp secrets.yml.example secrets.yml      # fill in restic_password + the two keys
+   ansible-vault encrypt secrets.yml        # optional but recommended
+   ansible-playbook playbook.yml -e @secrets.yml [--ask-vault-pass]
+   ```
+   Without secrets the files install but the timer stays off (and BackupStale then
+   correctly flags that backups aren't running).
+3. **Keep `restic_password` somewhere safe** — without it the backups can't be restored.
+
+### Restore
+
+```bash
+ssh root@<droplet> portfolio-restore.sh /restore   # latest snapshot -> /restore
+ssh root@<droplet> 'set -a; . /etc/portfolio-backup/backup.env; set +a; restic snapshots'
+```
+
+> The success metric reaches Prometheus via the node-exporter textfile collector —
+> that needs node-exporter started with
+> `--collector.textfile.directory=/var/lib/node_exporter/textfile_collector` and the
+> matching bind mount (both added in `docker-compose.yml`).
+
 ## Rebuild from scratch
 
 On a fresh droplet (after `terraform apply`): run the playbook, add your DNS A

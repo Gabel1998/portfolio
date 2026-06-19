@@ -7,3 +7,6 @@ inventory.ini
 # Vault password files / decrypted secrets
 .vault_pass
 *.vault
+
+# Backup secrets (restic password + Spaces keys) — never commit
+secrets.yml

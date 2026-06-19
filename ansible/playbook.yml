@@ -154,6 +154,147 @@
         state: started
         enabled: true
 
+    # =====================================================================
+    # Backups — nightly restic backup to a DigitalOcean Space, plus a
+    # node-exporter textfile metric so the BackupStale Prometheus alert works.
+    #
+    # Secrets (restic_password, backup_s3_access_key, backup_s3_secret_key) are
+    # NOT committed — supply them at run time, e.g.  -e @secrets.yml
+    # (see secrets.yml.example). The credential-dependent steps are skipped when
+    # no restic password is provided, so a plain run still configures the host.
+    # =====================================================================
+    - name: Install restic
+      ansible.builtin.apt:
+        name: restic
+        state: present
+
+    - name: Ensure the node-exporter textfile directory exists
+      ansible.builtin.file:
+        path: "{{ backup_textfile_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Ensure the backup config directory exists
+      ansible.builtin.file:
+        path: /etc/portfolio-backup
+        state: directory
+        owner: root
+        group: root
+        mode: "0700"
+
+    - name: Write the backup environment file (restic repo + credentials)
+      ansible.builtin.copy:
+        dest: /etc/portfolio-backup/backup.env
+        owner: root
+        group: root
+        mode: "0600"
+        content: |
+          RESTIC_REPOSITORY=s3:https://{{ backup_s3_region }}.digitaloceanspaces.com/{{ backup_s3_bucket }}
+          RESTIC_PASSWORD={{ restic_password }}
+          AWS_ACCESS_KEY_ID={{ backup_s3_access_key }}
+          AWS_SECRET_ACCESS_KEY={{ backup_s3_secret_key }}
+      no_log: true
+      when: restic_password | default('') | length > 0
+
+    - name: Install the backup script
+      ansible.builtin.copy:
+        dest: /usr/local/bin/portfolio-backup.sh
+        owner: root
+        group: root
+        mode: "0750"
+        content: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          set -o allexport
+          # shellcheck source=/dev/null
+          source /etc/portfolio-backup/backup.env
+          set +o allexport
+
+          restic backup {{ backup_paths | join(' ') }} --tag portfolio
+          restic forget --keep-daily {{ backup_keep_daily }} --keep-weekly {{ backup_keep_weekly }} --prune
+
+          # Publish a success metric for node-exporter's textfile collector (atomic write).
+          metric="{{ backup_textfile_dir }}/backup.prom"
+          tmp="$(mktemp)"
+          {
+            echo "# HELP backup_last_success_timestamp_seconds Unix time of the last successful restic backup."
+            echo "# TYPE backup_last_success_timestamp_seconds gauge"
+            echo "backup_last_success_timestamp_seconds $(date +%s)"
+          } > "$tmp"
+          chmod 0644 "$tmp"
+          mv "$tmp" "$metric"
+
+    - name: Install the restore helper
+      ansible.builtin.copy:
+        dest: /usr/local/bin/portfolio-restore.sh
+        owner: root
+        group: root
+        mode: "0750"
+        content: |
+          #!/usr/bin/env bash
+          # Restore the latest snapshot to a target directory (default /restore).
+          set -euo pipefail
+          set -o allexport
+          # shellcheck source=/dev/null
+          source /etc/portfolio-backup/backup.env
+          set +o allexport
+          target="${1:-/restore}"
+          echo "Restoring latest snapshot to ${target} ..."
+          restic restore latest --target "${target}"
+          echo "Done — e.g. ${target}/etc/letsencrypt. List snapshots with: restic snapshots"
+
+    - name: Initialise the restic repository if needed
+      ansible.builtin.shell:
+        cmd: |
+          set -a; . /etc/portfolio-backup/backup.env; set +a
+          restic snapshots >/dev/null 2>&1 || restic init
+      register: restic_init
+      changed_when: "'created restic repository' in restic_init.stdout"
+      when: restic_password | default('') | length > 0
+
+    - name: Install the backup systemd service
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/portfolio-backup.service
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          [Unit]
+          Description=Portfolio restic backup
+          After=network-online.target docker.service
+          Wants=network-online.target
+
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/local/bin/portfolio-backup.sh
+
+    - name: Install the backup systemd timer
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/portfolio-backup.timer
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          [Unit]
+          Description=Run the portfolio backup daily
+
+          [Timer]
+          OnCalendar=*-*-* 03:30:00
+          Persistent=true
+
+          [Install]
+          WantedBy=timers.target
+
+    - name: Enable the backup timer
+      ansible.builtin.systemd:
+        name: portfolio-backup.timer
+        state: started
+        enabled: true
+        daemon_reload: true
+      when: restic_password | default('') | length > 0
+
     # ---- Opt-in: issue the certificate (fresh hosts only; never runs by default) ----
     - name: Obtain the certificate via webroot
       ansible.builtin.command:
