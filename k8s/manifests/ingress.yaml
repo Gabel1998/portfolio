@@ -1,0 +1,27 @@
+# Ingress replacing the Nginx reverse proxy for these two services. On k3s this
+# is served by the bundled Traefik controller (no extra install needed).
+# For local testing without real DNS, set the host to "<node-ip>.nip.io".
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: portfolio
+  namespace: portfolio
+spec:
+  rules:
+    - host: andreasgabel.dk
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: portfolio-backend
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: portfolio-frontend
+                port:
+                  number: 80

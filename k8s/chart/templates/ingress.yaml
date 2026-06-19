@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: portfolio
+  labels:
+    {{- include "portfolio.labels" (dict "name" "ingress" "root" .) | nindent 4 }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          {{- range $name, $svc := .Values.services }}
+          - path: {{ $svc.path }}
+            pathType: {{ $svc.pathType }}
+            backend:
+              service:
+                name: portfolio-{{ $name }}
+                port:
+                  number: {{ $svc.port }}
+          {{- end }}

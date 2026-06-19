@@ -1,0 +1,82 @@
+{{- range $name, $svc := .Values.services }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-{{ $name }}
+  labels:
+    {{- include "portfolio.labels" (dict "name" $name "root" $) | nindent 4 }}
+spec:
+  replicas: {{ $svc.replicas }}
+  selector:
+    matchLabels:
+      {{- include "portfolio.selectorLabels" (dict "name" $name "root" $) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "portfolio.selectorLabels" (dict "name" $name "root" $) | nindent 8 }}
+    spec:
+      # These workloads never call the Kubernetes API.
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        {{- if $svc.hardened }}
+        runAsNonRoot: true
+        runAsUser: {{ $svc.runAsUser }}
+        runAsGroup: {{ $svc.runAsUser }}
+        {{- end }}
+      containers:
+        - name: {{ $name }}
+          image: {{ $svc.image }}
+          ports:
+            - containerPort: {{ $svc.port }}
+          {{- with $svc.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $svc.probes.startup }}
+          startupProbe:
+            httpGet:
+              path: {{ .path }}
+              port: {{ $svc.port }}
+            periodSeconds: {{ .periodSeconds }}
+            failureThreshold: {{ .failureThreshold }}
+          {{- end }}
+          livenessProbe:
+            httpGet:
+              path: {{ $svc.probes.liveness.path }}
+              port: {{ $svc.port }}
+            {{- with $svc.probes.liveness.initialDelaySeconds }}
+            initialDelaySeconds: {{ . }}
+            {{- end }}
+            periodSeconds: {{ $svc.probes.liveness.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: {{ $svc.probes.readiness.path }}
+              port: {{ $svc.port }}
+            {{- with $svc.probes.readiness.initialDelaySeconds }}
+            initialDelaySeconds: {{ . }}
+            {{- end }}
+            periodSeconds: {{ $svc.probes.readiness.periodSeconds }}
+          resources:
+            {{- toYaml $svc.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            {{- if $svc.hardened }}
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            {{- end }}
+          {{- if $svc.hardened }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          {{- end }}
+      {{- if $svc.hardened }}
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      {{- end }}
+{{- end }}

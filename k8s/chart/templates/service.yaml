@@ -1,0 +1,15 @@
+{{- range $name, $svc := .Values.services }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portfolio-{{ $name }}
+  labels:
+    {{- include "portfolio.labels" (dict "name" $name "root" $) | nindent 4 }}
+spec:
+  selector:
+    {{- include "portfolio.selectorLabels" (dict "name" $name "root" $) | nindent 4 }}
+  ports:
+    - port: {{ $svc.port }}
+      targetPort: {{ $svc.port }}
+{{- end }}

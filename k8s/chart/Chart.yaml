@@ -1,0 +1,6 @@
+apiVersion: v2
+name: portfolio
+description: Minimal Helm chart deploying the portfolio frontend + backend — a deliberately small k3s learning artifact, not a migration of the live Compose stack.
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
