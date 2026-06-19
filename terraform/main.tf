@@ -6,11 +6,11 @@ data "digitalocean_ssh_key" "default" {
 
 # The droplet that runs the whole Docker Compose platform.
 #
-# IMPORTANT: this server already exists. Import it before the first apply (see
-# README) so Terraform adopts the live box instead of spinning up a second one.
-# The droplet is configured by Docker Compose (and, later, Ansible) — not by
-# Terraform — so we ignore image drift to keep Terraform from ever proposing a
-# rebuild of the running server.
+# IMPORTANT: this server already exists. It is adopted via `terraform import`
+# (see README / import.sh), never created from scratch against the live account.
+# The OS and services are managed by Docker Compose (and, later, Ansible) — not
+# Terraform. On import, DigitalOcean does not return ssh_keys/user_data, so they
+# are ignored here; otherwise Terraform would propose to REBUILD the live droplet.
 resource "digitalocean_droplet" "portfolio" {
   name     = var.droplet_name
   region   = var.region
@@ -19,35 +19,20 @@ resource "digitalocean_droplet" "portfolio" {
   ssh_keys = [data.digitalocean_ssh_key.default.id]
 
   lifecycle {
-    ignore_changes = [image]
+    ignore_changes = [image, ssh_keys, user_data]
   }
 }
 
 # --- DNS ---
-# Importing the domain adopts the existing zone. Only the records declared below
-# are managed by Terraform; any other records (MX, TXT, etc.) are left untouched.
-resource "digitalocean_domain" "portfolio" {
-  name = var.domain
-}
-
-resource "digitalocean_record" "root" {
-  domain = digitalocean_domain.portfolio.name
-  type   = "A"
-  name   = "@"
-  value  = digitalocean_droplet.portfolio.ipv4_address
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "www" {
-  domain = digitalocean_domain.portfolio.name
-  type   = "A"
-  name   = "www"
-  value  = digitalocean_droplet.portfolio.ipv4_address
-  ttl    = 3600
-}
+# The andreasgabel.dk zone is hosted OUTSIDE DigitalOcean (at the registrar), so
+# it is intentionally not managed here. If you ever migrate the zone to DO, add
+# digitalocean_domain + digitalocean_record resources and point your registrar's
+# nameservers at ns1/ns2/ns3.digitalocean.com.
 
 # --- Cloud firewall ---
-# Only SSH (restricted), HTTP and HTTPS inbound; all outbound allowed.
+# Only SSH (restricted), HTTP and HTTPS inbound; all outbound allowed. If the
+# droplet has no cloud firewall yet, `terraform apply` creates and attaches this
+# one (a security improvement — review the plan before applying).
 resource "digitalocean_firewall" "portfolio" {
   name        = "${var.droplet_name}-fw"
   droplet_ids = [digitalocean_droplet.portfolio.id]

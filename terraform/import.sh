@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 #
-# Adopt the EXISTING DigitalOcean infrastructure into Terraform state.
-# This imports the live droplet, DNS records and firewall — it does NOT create
-# anything. Run it once, from the terraform/ directory, with your DO token in the
-# environment (never paste the token into a chat or commit it):
+# Adopt the EXISTING DigitalOcean droplet (and its cloud firewall, if any) into
+# Terraform state. This imports — it does NOT create anything. DNS for the site
+# is hosted outside DigitalOcean, so it is not managed by Terraform.
+#
+# Run once, from the terraform/ directory, with your DO token in the environment
+# (never paste the token into a chat or commit it):
 #
 #   export DIGITALOCEAN_TOKEN=dop_v1_xxxxxxxx
-#   ./import.sh                       # uses defaults: andreasgabel.dk / portfolio
-#   ./import.sh <domain> <droplet>    # or override
+#   ./import.sh                 # uses the default droplet name "portfolio"
+#   ./import.sh <droplet-name>  # or pass the real name
 #
-# Safe to re-run: resources already in state are skipped. Ends with `terraform plan`,
-# which should report no changes once everything is adopted.
+# Safe to re-run: resources already in state are skipped. Ends with `terraform
+# plan` — the droplet should show no changes; the firewall is created if absent.
 set -euo pipefail
 
 TOKEN="${DIGITALOCEAN_TOKEN:-${TF_VAR_do_token:-}}"
@@ -21,16 +23,15 @@ if [ -z "$TOKEN" ]; then
 fi
 export TF_VAR_do_token="$TOKEN"
 
-DOMAIN="${1:-andreasgabel.dk}"
-DROPLET_NAME="${2:-portfolio}"
+DROPLET_NAME="${1:-portfolio}"
 
 command -v terraform >/dev/null || { echo "ERROR: terraform not found on PATH." >&2; exit 1; }
 [ -d .terraform ] || terraform init -input=false >/dev/null
 
-echo "==> Discovering live resources via the DigitalOcean API..."
-DISCOVERY="$(python3 - "$TOKEN" "$DOMAIN" "$DROPLET_NAME" <<'PY'
+echo "==> Discovering the droplet and firewall via the DigitalOcean API..."
+DISCOVERY="$(python3 - "$TOKEN" "$DROPLET_NAME" <<'PY'
 import json, sys, urllib.request, urllib.error
-token, domain, dname = sys.argv[1], sys.argv[2], sys.argv[3]
+token, dname = sys.argv[1], sys.argv[2]
 
 def api(path):
     req = urllib.request.Request("https://api.digitalocean.com/v2" + path,
@@ -39,26 +40,23 @@ def api(path):
         return json.load(r)
 
 try:
-    droplet = next((d for d in api("/droplets?per_page=200")["droplets"]
-                    if d["name"] == dname), None)
-    if not droplet:
-        print("echo 'ERROR: no droplet named %s found in this account'; exit 1" % dname)
+    droplets = api("/droplets?per_page=200")["droplets"]
+    d = next((x for x in droplets if x["name"] == dname), None)
+    if not d:
+        names = ", ".join(x["name"] for x in droplets) or "(none)"
+        print("echo 'ERROR: no droplet named \"%s\" in this account.'" % dname)
+        print("echo 'Droplets found: %s'" % names)
+        print("echo 'Re-run with the real name:  ./import.sh <droplet-name>'")
+        print("exit 1")
         sys.exit(0)
-    ip = next((n["ip_address"] for n in droplet["networks"]["v4"]
-               if n["type"] == "public"), "")
-    recs = api("/domains/%s/records?per_page=200" % domain)["domain_records"]
-    root = next((r for r in recs if r["type"] == "A" and r["name"] == "@"), None)
-    www = next((r for r in recs if r["type"] == "A" and r["name"] == "www"), None)
+    ip = next((n["ip_address"] for n in d["networks"]["v4"] if n["type"] == "public"), "")
     fw = next((f for f in api("/firewalls?per_page=200")["firewalls"]
-               if droplet["id"] in f.get("droplet_ids", []) or f["name"] == dname + "-fw"), None)
+               if d["id"] in f.get("droplet_ids", []) or f["name"] == dname + "-fw"), None)
     keys = [k["name"] for k in api("/account/keys?per_page=200")["ssh_keys"]]
-
-    print("DROPLET_ID=%s" % droplet["id"])
-    print("REGION=%s" % droplet["region"]["slug"])
-    print("SIZE=%s" % droplet["size_slug"])
+    print("DROPLET_ID=%s" % d["id"])
+    print("REGION=%s" % d["region"]["slug"])
+    print("SIZE=%s" % d["size_slug"])
     print("DROPLET_IP=%s" % ip)
-    print("ROOT_ID=%s" % (root["id"] if root else ""))
-    print("WWW_ID=%s" % (www["id"] if www else ""))
     print("FW_ID=%s" % (fw["id"] if fw else ""))
     print("SSH_KEYS='%s'" % ",".join(keys))
 except urllib.error.HTTPError as e:
@@ -70,23 +68,23 @@ PY
 eval "$DISCOVERY"
 
 echo "    droplet : $DROPLET_NAME ($DROPLET_ID)  region=$REGION  size=$SIZE  ip=$DROPLET_IP"
-echo "    records : @=${ROOT_ID:-<none>}  www=${WWW_ID:-<none>}"
-echo "    firewall: ${FW_ID:-<none — will be created by apply>}"
+echo "    firewall: ${FW_ID:-<none — apply will create it>}"
 echo "    ssh keys: $SSH_KEYS"
 
-# Generate a starter terraform.tfvars (region/size pre-filled) if you don't have one.
+# Generate a starter terraform.tfvars (name/region/size pre-filled) if absent.
 if [ ! -f terraform.tfvars ]; then
   SSH_DEFAULT=""
   case "$SSH_KEYS" in *,*) ;; *) SSH_DEFAULT="$SSH_KEYS" ;; esac
   {
     echo "# Auto-generated by import.sh — token comes from the environment, not this file."
-    echo "ssh_key_name = \"${SSH_DEFAULT}\"   # pick one of: $SSH_KEYS"
+    echo "ssh_key_name = \"${SSH_DEFAULT}\"   # one of: $SSH_KEYS"
+    echo "droplet_name = \"$DROPLET_NAME\""
     echo "region       = \"$REGION\""
     echo "droplet_size = \"$SIZE\""
   } > terraform.tfvars
-  echo "==> Wrote terraform.tfvars (region/size match the live droplet)."
+  echo "==> Wrote terraform.tfvars (name/region/size match the live droplet)."
   if [ -z "$SSH_DEFAULT" ]; then
-    echo "    Multiple SSH keys exist — edit ssh_key_name in terraform.tfvars, then re-run." >&2
+    echo "    Multiple SSH keys exist — set ssh_key_name in terraform.tfvars, then re-run." >&2
     exit 1
   fi
 fi
@@ -100,12 +98,9 @@ do_import() {
   terraform import "$addr" "$id"
 }
 
-do_import digitalocean_droplet.portfolio   "$DROPLET_ID"
-do_import digitalocean_domain.portfolio    "$DOMAIN"
-do_import digitalocean_record.root         "${ROOT_ID:+$DOMAIN,$ROOT_ID}"
-do_import digitalocean_record.www          "${WWW_ID:+$DOMAIN,$WWW_ID}"
-do_import digitalocean_firewall.portfolio  "$FW_ID"
+do_import digitalocean_droplet.portfolio  "$DROPLET_ID"
+do_import digitalocean_firewall.portfolio "$FW_ID"
 
 echo ""
-echo "==> terraform plan (expect NO changes, or only the firewall being created):"
+echo "==> terraform plan (the droplet should show NO changes; the firewall is created if absent):"
 terraform plan

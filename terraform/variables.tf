@@ -1,13 +1,8 @@
 variable "do_token" {
-  description = "DigitalOcean API token (read/write). Set via TF_VAR_do_token or terraform.tfvars."
+  description = "DigitalOcean API token (read/write). Usually left unset — the provider reads the DIGITALOCEAN_TOKEN environment variable. Set TF_VAR_do_token only if you prefer to pass it explicitly."
   type        = string
   sensitive   = true
-}
-
-variable "domain" {
-  description = "Domain served by the droplet."
-  type        = string
-  default     = "andreasgabel.dk"
+  default     = null
 }
 
 variable "droplet_name" {

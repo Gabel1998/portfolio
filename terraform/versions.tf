@@ -26,5 +26,7 @@ terraform {
 }
 
 provider "digitalocean" {
+  # When var.do_token is null, the provider falls back to the DIGITALOCEAN_TOKEN
+  # (or DIGITALOCEAN_ACCESS_TOKEN) environment variable.
   token = var.do_token
 }
