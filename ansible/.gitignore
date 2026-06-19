@@ -1,0 +1,9 @@
+# Real inventory (may contain host IPs / per-host vars)
+inventory.ini
+
+# Ansible scratch
+*.retry
+
+# Vault password files / decrypted secrets
+.vault_pass
+*.vault

@@ -1,0 +1,9 @@
+---
+# Non-secret defaults for the portfolio droplet.
+domain: andreasgabel.dk
+compose_dir: /opt/portfolio
+certbot_webroot: /var/www/certbot
+
+# Only used when issuing a NEW certificate (run with --tags certbot_issue).
+# Set your email so Let's Encrypt can send expiry notices.
+certbot_email: ""
