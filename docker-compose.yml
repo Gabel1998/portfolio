@@ -143,8 +143,11 @@ services:
     restart: unless-stopped
     command:
       - '--path.rootfs=/host'
+      - '--collector.textfile.directory=/var/lib/node_exporter/textfile_collector'
     volumes:
       - /:/host:ro,rslave
+      # Backup job writes backup_last_success_timestamp_seconds here (see Ansible)
+      - /var/lib/node_exporter/textfile_collector:/var/lib/node_exporter/textfile_collector:ro
     expose:
       - "9100"
     networks:

@@ -156,12 +156,15 @@ jobs:
           script: |
             cd /opt/portfolio
 
-            # Sync repo for config files (docker-compose.yml, nginx, workflows)
+            # Sync repo for config files (docker-compose.yml, nginx, workflows).
+            # The repo is public, so git needs no credentials — the GHCR_TOKEN is
+            # only used for `docker login` below. (Avoids persisting the token in
+            # the server's .git/config, which a token-in-remote-URL would do.)
             if [ -d ".git" ]; then
               git pull origin main
             else
               git init
-              git remote add origin https://Gabel1998:${{ secrets.GHCR_TOKEN }}@github.com/Gabel1998/portfolio.git
+              git remote add origin https://github.com/Gabel1998/portfolio.git
               git fetch origin main
               git reset --hard origin/main
             fi

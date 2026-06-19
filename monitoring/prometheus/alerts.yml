@@ -30,3 +30,15 @@ groups:
         annotations:
           summary: "Low disk space on the droplet"
           description: "Less than 15% disk space remaining on the root filesystem."
+
+      - alert: BackupStale
+        expr: |
+          absent(backup_last_success_timestamp_seconds)
+          or
+          time() - backup_last_success_timestamp_seconds > 26 * 3600
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Backups are stale or missing"
+          description: "No successful restic backup in over 26 hours (or the backup metric is absent). The nightly backup writes backup_last_success_timestamp_seconds via the node-exporter textfile collector."
