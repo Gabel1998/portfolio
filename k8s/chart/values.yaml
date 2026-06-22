@@ -1,0 +1,60 @@
+ingress:
+  host: andreasgabel.dk
+
+# Two services, mirrored from the Compose stack. Each renders a Deployment +
+# Service and contributes a path to the shared Ingress. Resources land in the
+# release namespace (install with -n portfolio --create-namespace).
+services:
+  backend:
+    image: ghcr.io/gabel1998/portfolio/backend:latest
+    port: 8080
+    path: /api
+    pathType: Prefix
+    replicas: 1
+    hardened: true # runAsNonRoot + readOnlyRootFilesystem + /tmp emptyDir
+    runAsUser: 1000 # image USER is non-numeric; pin a numeric UID so the pod starts
+    env:
+      - name: CORS_ORIGINS
+        value: "https://andreasgabel.dk"
+    probes:
+      startup: # gate a cold JVM start; up to ~120s
+        path: /actuator/health/liveness
+        periodSeconds: 5
+        failureThreshold: 24
+      liveness:
+        path: /actuator/health/liveness
+        periodSeconds: 20
+      readiness:
+        path: /actuator/health/readiness
+        periodSeconds: 10
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+  frontend:
+    image: ghcr.io/gabel1998/portfolio/frontend:latest
+    port: 80
+    path: /
+    pathType: Prefix
+    replicas: 1
+    hardened: false # stock nginx master needs root to bind :80
+    env: []
+    probes:
+      liveness:
+        path: /
+        initialDelaySeconds: 10
+        periodSeconds: 20
+      readiness:
+        path: /
+        initialDelaySeconds: 5
+        periodSeconds: 10
+    resources:
+      requests:
+        cpu: 25m
+        memory: 32Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi

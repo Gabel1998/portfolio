@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-frontend
+  namespace: portfolio
+  labels:
+    app: portfolio-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio-frontend
+  template:
+    metadata:
+      labels:
+        app: portfolio-frontend
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: frontend
+          image: ghcr.io/gabel1998/portfolio/frontend:latest
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          # Stock nginx's master runs as root to bind :80 and forks workers via
+          # setuid, so it keeps default caps and a writable rootfs. seccomp +
+          # no-privilege-escalation still apply. Switching to
+          # nginxinc/nginx-unprivileged (on :8080) would allow the same full
+          # hardening as the backend (runAsNonRoot + readOnlyRootFilesystem).
+          securityContext:
+            allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portfolio-frontend
+  namespace: portfolio
+spec:
+  selector:
+    app: portfolio-frontend
+  ports:
+    - port: 80
+      targetPort: 80

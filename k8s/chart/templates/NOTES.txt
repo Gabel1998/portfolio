@@ -1,0 +1,11 @@
+Portfolio (frontend + backend) deployed to namespace "{{ .Release.Namespace }}".
+
+Ingress host : http://{{ .Values.ingress.host }}/
+Backend      : http://{{ .Values.ingress.host }}/api/   (Actuator health: /actuator/health)
+
+Inspect:
+  kubectl -n {{ .Release.Namespace }} get pods,svc,ingress
+
+Local testing without real DNS (use the node IP via nip.io):
+  helm upgrade --install portfolio . -n {{ .Release.Namespace }} --create-namespace \
+    --set ingress.host=<node-ip>.nip.io

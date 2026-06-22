@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-backend
+  namespace: portfolio
+  labels:
+    app: portfolio-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portfolio-backend
+  template:
+    metadata:
+      labels:
+        app: portfolio-backend
+    spec:
+      # The backend never calls the Kubernetes API — don't mount its SA token.
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        # Numeric UID/GID: the image's USER is "appuser" (non-numeric), which the
+        # kubelet can't verify as non-root — so pin it here, or the pod won't start.
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: backend
+          # :latest for the demo; pin to the :<git-sha> tag the pipeline publishes
+          # (as talent-api does) for reproducible, rollback-able deploys in prod.
+          image: ghcr.io/gabel1998/portfolio/backend:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CORS_ORIGINS
+              value: "https://andreasgabel.dk"
+          # Spring Boot probe groups (liveness/readiness are distinct): a slow
+          # dependency must NOT restart the pod, only mark it unready.
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 5
+            failureThreshold: 24 # up to ~120s for a cold JVM start
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        # Spring Boot needs a writable /tmp; everything else is read-only.
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portfolio-backend
+  namespace: portfolio
+spec:
+  selector:
+    app: portfolio-backend
+  ports:
+    - port: 8080
+      targetPort: 8080
