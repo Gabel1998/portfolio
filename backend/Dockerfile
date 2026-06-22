@@ -6,6 +6,8 @@ COPY src ./src
 RUN mvn package -DskipTests -B
 
 FROM eclipse-temurin:21-jre-alpine
+# Patch OS packages (e.g. openssl/libcrypto) to the latest Alpine security fixes
+RUN apk upgrade --no-cache
 WORKDIR /app
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser

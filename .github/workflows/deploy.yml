@@ -129,6 +129,8 @@ jobs:
           image-ref: ghcr.io/gabel1998/portfolio/backend:${{ github.sha }}
           format: table
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'
 
       - name: Scan frontend image
         uses: aquasecurity/trivy-action@master
@@ -136,6 +138,8 @@ jobs:
           image-ref: ghcr.io/gabel1998/portfolio/frontend:${{ github.sha }}
           format: table
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'
 
   deploy:
     name: Deploy to Server
@@ -152,12 +156,15 @@ jobs:
           script: |
             cd /opt/portfolio
 
-            # Sync repo for config files (docker-compose.yml, nginx, workflows)
+            # Sync repo for config files (docker-compose.yml, nginx, workflows).
+            # The repo is public, so git needs no credentials — the GHCR_TOKEN is
+            # only used for `docker login` below. (Avoids persisting the token in
+            # the server's .git/config, which a token-in-remote-URL would do.)
             if [ -d ".git" ]; then
               git pull origin main
             else
               git init
-              git remote add origin https://Gabel1998:${{ secrets.GHCR_TOKEN }}@github.com/Gabel1998/portfolio.git
+              git remote add origin https://github.com/Gabel1998/portfolio.git
               git fetch origin main
               git reset --hard origin/main
             fi
@@ -167,27 +174,51 @@ jobs:
 
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u Gabel1998 --password-stdin
 
+            # Snapshot currently-running images so we can roll back an unhealthy release
+            BACKEND=ghcr.io/gabel1998/portfolio/backend
+            FRONTEND=ghcr.io/gabel1998/portfolio/frontend
+            docker tag $BACKEND:latest $BACKEND:rollback 2>/dev/null || echo "No previous backend image to snapshot"
+            docker tag $FRONTEND:latest $FRONTEND:rollback 2>/dev/null || echo "No previous frontend image to snapshot"
+
+            # Deploy the new release
             docker compose pull
             docker compose up -d --force-recreate
-            docker image prune -f
 
-            echo "Deploy complete"
+            # Health gate: poll the live endpoint; only HTTP 200 counts as healthy
+            healthy=0
+            for i in $(seq 1 18); do
+              sleep 5
+              CODE=$(curl -sk -o /dev/null -w "%{http_code}" --max-time 5 https://localhost/api/health || true)
+              echo "Health attempt $i: HTTP $CODE"
+              if [ "$CODE" = "200" ]; then healthy=1; break; fi
+            done
+
+            if [ "$healthy" != "1" ]; then
+              echo "New release failed health check — rolling back to previous images"
+              docker tag $BACKEND:rollback $BACKEND:latest 2>/dev/null || true
+              docker tag $FRONTEND:rollback $FRONTEND:latest 2>/dev/null || true
+              docker compose up -d --force-recreate
+              exit 1
+            fi
+
+            docker image prune -f
+            echo "Deploy healthy and complete"
 
   health-check:
-    name: Health Check
+    name: External Smoke Test
     runs-on: ubuntu-latest
     needs: deploy
     steps:
-      - name: Wait for services to start
-        run: sleep 90
-
-      - name: Check health endpoint
+      - name: Verify the public endpoint returns 200
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 http://${{ secrets.DROPLET_HOST }}/api/health || true)
-          echo "HTTP status: $STATUS"
-          if [ "$STATUS" = "200" ] || [ "$STATUS" = "301" ] || [ "$STATUS" = "302" ]; then
-            echo "Health check passed (HTTP $STATUS — service is responding)"
-          else
-            echo "Health check failed (HTTP $STATUS)"
-            exit 1
-          fi
+          for i in $(seq 1 6); do
+            STATUS=$(curl -skL -o /dev/null -w "%{http_code}" --max-time 10 https://${{ secrets.DROPLET_HOST }}/api/health || true)
+            echo "Attempt $i: HTTP $STATUS"
+            if [ "$STATUS" = "200" ]; then
+              echo "External smoke test passed"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "External smoke test failed — endpoint did not return 200"
+          exit 1

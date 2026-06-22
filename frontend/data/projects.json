@@ -5,18 +5,48 @@
         "description": "The site you're looking at. A containerized multi-project platform running on a single droplet — Docker Compose, Nginx reverse proxy, CI/CD via GitHub Actions, and auto-generated infrastructure documentation.",
         "descriptionDa": "Siden du kigger på nu. En containeriseret multi-projekt platform der kører på en enkelt droplet — Docker Compose, Nginx reverse proxy, CI/CD via GitHub Actions og auto-genereret infrastruktur-dokumentation.",
         "tech": ["Docker", "Nginx", "GitHub Actions", "Spring Boot", "Three.js", "DigitalOcean"],
-        "github": "https://github.com/Gabel1998/Portfolio-project",
+        "github": "https://github.com/Gabel1998/portfolio",
         "infrastructurePath": "/infrastructure.html",
+        "image": null
+    },
+    {
+        "slug": "monkknows",
+        "title": "MonkKnows",
+        "description": "A legacy application modernized into production with a full DevOps toolchain: containerized with Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image and dependency scanning, and — uniquely on this site — a Prometheus + Grafana observability stack with availability and SLA tracking. Built collaboratively with a PR-based workflow, ADRs, and runbooks; deployed to Azure VMs.",
+        "descriptionDa": "En legacy-applikation moderniseret til produktion med en fuld DevOps-værktøjskæde: containeriseret med Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image- og dependency-scanning og — som det eneste projekt her — en Prometheus + Grafana observability-stak med availability- og SLA-måling. Bygget i samarbejde med PR-baseret workflow, ADRs og runbooks; deployet til Azure-VMs.",
+        "tech": ["Ruby", "PostgreSQL", "Docker Compose", "GitHub Actions", "Prometheus", "Grafana", "Azure"],
+        "github": "https://github.com/nasOps/MonkKnows",
         "image": null
     },
     {
         "slug": "raidfines",
         "title": "Raid Fines",
-        "description": "A World of Warcraft raid fine management system. Players accrue fines for infractions during raid, officers log fines, and players view their balance.",
-        "descriptionDa": "Et World of Warcraft raid-bødesystem. Spillere opkræves bøder for overtrædelser under raid, officers logger bøder, og spillere kan se deres saldo.",
-        "tech": ["Java", "Spring Boot", "MySQL", "Vanilla JS", "Docker", "OAuth2"],
+        "description": "A full-stack World of Warcraft raid-fine platform I operate in production: a React + TypeScript SPA and a Spring Boot (Java 21) API with Battle.net OAuth2/JWT login, Warcraft Logs GraphQL integration, MobilePay payments, and an in-game Lua addon. Containerized and deployed to the live droplet via GitHub Actions.",
+        "descriptionDa": "En full-stack World of Warcraft raid-bødeplatform, som jeg driver i produktion: en React + TypeScript SPA og et Spring Boot (Java 21) API med Battle.net OAuth2/JWT-login, Warcraft Logs GraphQL-integration, MobilePay-betaling og en in-game Lua-addon. Containeriseret og deployet til den live droplet via GitHub Actions.",
+        "tech": ["React", "TypeScript", "Spring Boot", "Java 21", "OAuth2 / JWT", "MySQL", "Docker", "GitHub Actions"],
         "github": "https://github.com/Gabel1998/raid-fines",
         "showroomPath": "/raidfines",
+        "image": null
+    },
+    {
+        "slug": "talent-api",
+        "title": "Talent API",
+        "description": "A Spring Boot (Java 21) REST API built for a Danish internship challenge — but the real story is the delivery pipeline: GitHub Actions with quality gates (JaCoCo, Checkstyle, SpotBugs), images published to GHCR, and an automated deploy to the live droplet. Documented with Swagger / OpenAPI.",
+        "descriptionDa": "Et Spring Boot (Java 21) REST API bygget til en dansk praktik-udfordring — men den egentlige historie er leverancepipelinen: GitHub Actions med kvalitetsgates (JaCoCo, Checkstyle, SpotBugs), images publiceret til GHCR og en automatisk deploy til den live droplet. Dokumenteret med Swagger / OpenAPI.",
+        "tech": ["Java 21", "Spring Boot", "GitHub Actions", "GHCR", "JaCoCo", "Swagger / OpenAPI", "Docker"],
+        "github": "https://github.com/Gabel1998/talent-api",
+        "showroomPath": "/talent-api",
+        "image": null
+    },
+    {
+        "slug": "insolvens-intelligence",
+        "title": "Insolvens Intelligence",
+        "description": "A hybrid RAG system for insolvency law research. Combines graph-RAG (company ownership structures from CVR) with vector-RAG (Danish court rulings) and transaction analysis via an AI agent in n8n. Neo4j serves as both graph and vector database — 61 companies, 989 rulings, and 46,000+ embedded chunks.",
+        "descriptionDa": "Et hybrid RAG-system til insolvensretlig research. Kombinerer graf-RAG (ejerskabsstrukturer fra CVR) med vektor-RAG (danske domstolsafgørelser) og transaktionsanalyse via en AI-agent i n8n. Neo4j fungerer som både graf- og vektordatabase — 61 selskaber, 989 afgørelser og 46.000+ embeddede chunks.",
+        "tech": ["n8n", "Neo4j", "Ollama", "Python", "RAG", "Graph DB"],
+        "github": "https://github.com/Gabel1998/insolvens-intelligence",
+        "showroomPath": "/insolvens-intelligence.html",
+        "status": "in-development",
         "image": null
     },
     {
@@ -37,38 +67,6 @@
         "tech": ["Java", "Spring Boot", "JPA", "Leaflet.js", "Vanilla JS", "H2"],
         "github": "https://github.com/Gabel1998/beskyttelsesrum",
         "showroomPath": "/beskyttelsesrum",
-        "image": null
-    },
-    {
-        "slug": "talent-api",
-        "title": "Talent API",
-        "description": "A REST API for internship applications. Serves structured data about candidates, documents, and projects. Features Swagger UI, i18n, and a polished landing page.",
-        "descriptionDa": "En REST API til praktikansøgninger. Serverer struktureret data om kandidater, dokumenter og projekter. Med Swagger UI, i18n og en poleret landingsside.",
-        "tech": ["Java", "Spring Boot", "Swagger", "Docker", "GitHub Actions"],
-        "github": "https://github.com/Gabel1998/talent-api",
-        "showroomPath": "/talent-api",
-        "status": "in-development",
-        "image": null
-    },
-    {
-        "slug": "insolvens-intelligence",
-        "title": "Insolvens Intelligence",
-        "description": "A hybrid RAG system for insolvency law research. Combines graph-RAG (company ownership structures from CVR) with vector-RAG (Danish court rulings) and transaction analysis via an AI agent in n8n. Neo4j serves as both graph and vector database — 61 companies, 989 rulings, and 46,000+ embedded chunks.",
-        "descriptionDa": "Et hybrid RAG-system til insolvensretlig research. Kombinerer graf-RAG (ejerskabsstrukturer fra CVR) med vektor-RAG (danske domstolsafgørelser) og transaktionsanalyse via en AI-agent i n8n. Neo4j fungerer som både graf- og vektordatabase — 61 selskaber, 989 afgørelser og 46.000+ embeddede chunks.",
-        "tech": ["n8n", "Neo4j", "Ollama", "Python", "RAG", "Graph DB"],
-        "github": "https://github.com/Gabel1998/insolvens-intelligence",
-        "showroomPath": "/insolvens-intelligence.html",
-        "status": "in-development",
-        "image": null
-    },
-    {
-        "slug": "monkknows",
-        "title": "MonkKnows",
-        "description": "A collaborative DevOps project. Legacy codebase being modernized with containerization, CI/CD pipelines, and infrastructure automation.",
-        "descriptionDa": "Et samarbejds-DevOps-projekt. Legacy kodebase der moderniseres med containerisering, CI/CD pipelines og infrastruktur-automatisering.",
-        "tech": ["Ruby", "Python", "DevOps", "Docker"],
-        "github": "https://github.com/nasOps/MonkKnows",
-        "status": "in-development",
         "image": null
     }
 ]

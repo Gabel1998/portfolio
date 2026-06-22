@@ -1,0 +1,15 @@
+route:
+  receiver: default
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: default
+    # TODO: add a real destination so alerts actually deliver. Example (Discord/Slack
+    # incoming webhook). Until this is set, alerts still fire and are visible in the
+    # Prometheus and Alertmanager UIs, they are just not pushed anywhere.
+    # webhook_configs:
+    #   - url: 'https://discord.com/api/webhooks/xxx/yyy/slack'
+    #     send_resolved: true

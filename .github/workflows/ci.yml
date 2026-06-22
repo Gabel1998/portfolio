@@ -112,6 +112,8 @@ jobs:
           image-ref: portfolio-backend:ci
           format: table
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'
 
       - name: Scan frontend image for vulnerabilities
         uses: aquasecurity/trivy-action@master
@@ -119,3 +121,5 @@ jobs:
           image-ref: portfolio-frontend:ci
           format: table
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'

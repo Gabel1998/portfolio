@@ -208,7 +208,8 @@ public class InfrastructureController {
     private Map<String, Object> parseWorkflowYaml(String fileName, String yamlContent) {
         try {
             Yaml yaml = new Yaml();
-            Map<String, Object> wf = yaml.load(yamlContent);
+            // Object keys: SnakeYaml (YAML 1.1) parses the "on:" key as Boolean.TRUE, not a String.
+            Map<Object, Object> wf = yaml.load(yamlContent);
             if (wf == null) return null;
 
             Map<String, Object> result = new LinkedHashMap<>();
