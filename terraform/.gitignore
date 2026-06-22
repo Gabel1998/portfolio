@@ -1,0 +1,19 @@
+# Local Terraform state and provider plugins
+.terraform/
+.terraform.tfstate.lock.info
+
+# State may contain secrets — never commit it
+*.tfstate
+*.tfstate.*
+
+# Real variable files (keep only the .example)
+*.tfvars
+!*.tfvars.example
+
+# Plan output and crash logs
+*.tfplan
+crash.log
+crash.*.log
+
+# NOTE: .terraform.lock.hcl is intentionally NOT ignored — it pins provider
+# versions and should be committed.
