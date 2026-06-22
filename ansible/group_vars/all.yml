@@ -1,0 +1,26 @@
+---
+# Non-secret defaults for the portfolio droplet.
+domain: andreasgabel.dk
+compose_dir: /opt/portfolio
+certbot_webroot: /var/www/certbot
+
+# Only used when issuing a NEW certificate (run with --tags certbot_issue).
+# Set your email so Let's Encrypt can send expiry notices.
+certbot_email: ""
+
+# --- Backups (restic -> DigitalOcean Space) ---
+backup_textfile_dir: /var/lib/node_exporter/textfile_collector
+backup_s3_region: fra1
+backup_s3_bucket: andreasgabel-backups
+backup_paths:
+  - /etc/letsencrypt
+  - /var/lib/docker/volumes
+backup_keep_daily: 7
+backup_keep_weekly: 4
+
+# Secrets — DO NOT put real values here. Provide at run time via -e @secrets.yml
+# (see secrets.yml.example) or ansible-vault. The empty defaults keep credential-
+# less runs (and --check) working; the backup timer is only enabled when set.
+restic_password: ""
+backup_s3_access_key: ""
+backup_s3_secret_key: ""

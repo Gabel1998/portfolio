@@ -1,0 +1,14 @@
+# Copy to inventory.ini (gitignored) and fill in your droplet.
+# The IP is available from Terraform:  (cd ../terraform && terraform output -raw droplet_ip)
+
+[portfolio]
+droplet ansible_host=YOUR_DROPLET_IP
+
+[portfolio:vars]
+ansible_user=root
+# If the droplet's SSH key is not one of your default ~/.ssh keys (or loaded in
+# ssh-agent), point Ansible at the private key:
+# ansible_ssh_private_key_file=~/.ssh/your_key
+#
+# If you log in as a non-root sudo user instead of root, set ansible_user above
+# and run the playbook with --ask-become-pass (or set up passwordless sudo).
