@@ -12,8 +12,8 @@
     {
         "slug": "monkknows",
         "title": "MonkKnows",
-        "description": "A legacy application modernized into production with a full DevOps toolchain: containerized with Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image and dependency scanning, and — uniquely on this site — a Prometheus + Grafana observability stack with availability and SLA tracking. Built collaboratively with a PR-based workflow, ADRs, and runbooks; deployed to Azure VMs.",
-        "descriptionDa": "En legacy-applikation moderniseret til produktion med en fuld DevOps-værktøjskæde: containeriseret med Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image- og dependency-scanning og — som det eneste projekt her — en Prometheus + Grafana observability-stak med availability- og SLA-måling. Bygget i samarbejde med PR-baseret workflow, ADRs og runbooks; deployet til Azure-VMs.",
+        "description": "A legacy application I modernized into production with a full DevOps toolchain: containerized with Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image and dependency scanning, and a Prometheus + Grafana observability stack with availability and SLA tracking. Built collaboratively with a PR-based workflow, ADRs, and runbooks, and deployed to Azure VMs. The platform has since been decommissioned, but the repository preserves the full CI/CD, observability, and team-workflow history.",
+        "descriptionDa": "En legacy-applikation jeg moderniserede til produktion med en fuld DevOps-værktøjskæde: containeriseret med Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image- og dependency-scanning og en Prometheus + Grafana observability-stak med availability- og SLA-måling. Bygget i samarbejde med PR-baseret workflow, ADRs og runbooks, og deployet til Azure-VMs. Platformen er sidenhen nedlagt, men repoet bevarer hele CI/CD-, observability- og team-workflow-historikken.",
         "tech": ["Ruby", "PostgreSQL", "Docker Compose", "GitHub Actions", "Prometheus", "Grafana", "Azure"],
         "github": "https://github.com/nasOps/MonkKnows",
         "image": null
