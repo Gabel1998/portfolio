@@ -194,9 +194,12 @@ jobs:
             docker compose pull
             docker compose up -d --force-recreate
 
-            # Health gate: poll the live endpoint; only HTTP 200 counts as healthy
+            # Health gate: poll the live endpoint; only HTTP 200 counts as healthy.
+            # 48 x 5s = 4 min — the Spring Boot backend needs ~2 min to boot on the
+            # 1-vCPU/2 GB droplet when the whole stack is force-recreated at once, so
+            # a tighter gate false-fails and triggers a needless rollback.
             healthy=0
-            for i in $(seq 1 18); do
+            for i in $(seq 1 48); do
               sleep 5
               CODE=$(curl -sk -o /dev/null -w "%{http_code}" --max-time 5 https://localhost/api/health || true)
               echo "Health attempt $i: HTTP $CODE"
