@@ -115,6 +115,7 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
+    profiles: ["observability"]
     restart: unless-stopped
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -130,6 +131,7 @@ services:
 
   alertmanager:
     image: prom/alertmanager:latest
+    profiles: ["observability"]
     restart: unless-stopped
     volumes:
       - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
@@ -140,6 +142,7 @@ services:
 
   node-exporter:
     image: prom/node-exporter:latest
+    profiles: ["observability"]
     restart: unless-stopped
     command:
       - '--path.rootfs=/host'
@@ -155,6 +158,7 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
+    profiles: ["observability"]
     restart: unless-stopped
     privileged: true
     volumes:
@@ -169,6 +173,7 @@ services:
 
   grafana:
     image: grafana/grafana:latest
+    profiles: ["observability"]
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}

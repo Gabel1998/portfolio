@@ -10,6 +10,13 @@ permissions:
   packages: write
   checks: write
 
+# Serialize deploys to the single droplet: never run two `docker compose` deploys
+# against the same host at once (merging several PRs would otherwise fire parallel
+# deploys that fight over the same daemon).
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
   build-and-test:
     name: Build & Test
@@ -153,6 +160,9 @@ jobs:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
+          # Pulling the observability images on a small droplet can exceed the
+          # action's 10-minute default; allow time for pull + health gate + rollback.
+          command_timeout: 30m
           script: |
             cd /opt/portfolio
 
