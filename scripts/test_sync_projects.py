@@ -135,6 +135,13 @@ def test_fetch_portfolio_yml_parses_and_defaults(monkeypatch):
     assert sp.fetch_portfolio_yml("tok", "Gabel1998/a") == {}
 
 
+def test_fetch_portfolio_yml_non_dict_returns_empty(monkeypatch):
+    encoded = base64.b64encode(b"- just\n- a list\n").decode()
+    monkeypatch.setattr(sp.requests, "get",
+                        fake_get({"/contents/.portfolio.yml": FakeResponse({"content": encoded})}))
+    assert sp.fetch_portfolio_yml("tok", "Gabel1998/a") == {}
+
+
 def test_fetch_languages_sorted_by_bytes(monkeypatch):
     monkeypatch.setattr(sp.requests, "get",
                         fake_get({"/languages": FakeResponse({"CSS": 10, "Java": 900})}))

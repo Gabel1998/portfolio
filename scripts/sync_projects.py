@@ -113,7 +113,8 @@ def fetch_portfolio_yml(token, full_name):
     data = _gh_get_or_none(f"/repos/{full_name}/contents/.portfolio.yml", token)
     if data is None:
         return {}
-    return yaml.safe_load(base64.b64decode(data["content"])) or {}
+    parsed = yaml.safe_load(base64.b64decode(data["content"]))
+    return parsed if isinstance(parsed, dict) else {}
 
 
 def fetch_languages(token, full_name):
