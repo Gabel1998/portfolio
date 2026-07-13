@@ -31,6 +31,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
+      # PRs created with the default GITHUB_TOKEN do not trigger the pull_request
+      # CI workflow. Acceptable: the diff is a reviewed data-file change, and deploy
+      # runs on merge to main. For CI-on-PR, add a PAT secret and pass it as `token:`.
       - name: Open pull request
         if: steps.sync.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v6
