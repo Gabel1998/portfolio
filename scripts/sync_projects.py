@@ -6,7 +6,11 @@ generated via the Claude API; hand-written cards (no `"generated": true`) are
 read-only. Spec: docs/superpowers/specs/2026-07-13-auto-portfolio-cards-design.md
 """
 
+import base64
 from pathlib import Path
+
+import requests
+import yaml
 
 GITHUB_USER = "Gabel1998"
 API = "https://api.github.com"
@@ -61,3 +65,53 @@ def gather_content(repo, readme, languages):
     if readme:
         parts.append("README:\n" + readme)
     return "\n".join(parts), thin
+
+
+def gh_get(path, token, **params):
+    resp = requests.get(
+        f"{API}{path}",
+        params=params,
+        headers={"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def _gh_get_or_none(path, token):
+    try:
+        return gh_get(path, token)
+    except requests.HTTPError as err:
+        if err.response is not None and err.response.status_code == 404:
+            return None
+        raise
+
+
+def fetch_portfolio_repos(token):
+    repos, page = [], 1
+    while True:
+        batch = gh_get(f"/users/{GITHUB_USER}/repos", token, per_page=100, page=page)
+        if not batch:
+            break
+        repos.extend(batch)
+        page += 1
+    return [r for r in repos if "portfolio" in r.get("topics", [])]
+
+
+def fetch_readme(token, full_name):
+    data = _gh_get_or_none(f"/repos/{full_name}/readme", token)
+    if data is None:
+        return None
+    return base64.b64decode(data["content"]).decode("utf-8", errors="replace")
+
+
+def fetch_portfolio_yml(token, full_name):
+    data = _gh_get_or_none(f"/repos/{full_name}/contents/.portfolio.yml", token)
+    if data is None:
+        return {}
+    return yaml.safe_load(base64.b64decode(data["content"])) or {}
+
+
+def fetch_languages(token, full_name):
+    langs = gh_get(f"/repos/{full_name}/languages", token)
+    return sorted(langs, key=langs.get, reverse=True)
