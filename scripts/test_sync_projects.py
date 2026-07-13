@@ -146,3 +146,34 @@ def test_non_404_http_errors_propagate(monkeypatch):
                         fake_get({"/repos/Gabel1998/a/readme": FakeResponse({}, status=500)}))
     with pytest.raises(requests.HTTPError):
         sp.fetch_readme("tok", "Gabel1998/a")
+
+
+import json
+from types import SimpleNamespace
+
+
+class FakeAnthropicClient:
+    def __init__(self, payload):
+        self.payload, self.last_kwargs = payload, None
+        self.messages = SimpleNamespace(create=self._create)
+
+    def _create(self, **kwargs):
+        self.last_kwargs = kwargs
+        block = SimpleNamespace(type="text", text=json.dumps(self.payload))
+        return SimpleNamespace(content=[block])
+
+
+def test_generate_card_text_uses_structured_output():
+    client = FakeAnthropicClient(TEXT)
+    result = sp.generate_card_text(client, "content here", "[]", thin=False)
+    assert result == TEXT
+    kwargs = client.last_kwargs
+    assert kwargs["model"] == "claude-opus-4-8"
+    assert kwargs["output_config"]["format"]["type"] == "json_schema"
+    assert "content here" in kwargs["messages"][0]["content"]
+
+
+def test_generate_card_text_thin_note_in_prompt():
+    client = FakeAnthropicClient(TEXT)
+    sp.generate_card_text(client, "c", "[]", thin=True)
+    assert "sparse" in client.last_kwargs["messages"][0]["content"]

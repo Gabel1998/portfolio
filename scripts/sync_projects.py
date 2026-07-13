@@ -115,3 +115,48 @@ def fetch_portfolio_yml(token, full_name):
 def fetch_languages(token, full_name):
     langs = gh_get(f"/repos/{full_name}/languages", token)
     return sorted(langs, key=langs.get, reverse=True)
+
+
+CARD_TEXT_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "title": {"type": "string"},
+        "description": {"type": "string"},
+        "descriptionDa": {"type": "string"},
+        "tech": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": ["title", "description", "descriptionDa", "tech"],
+    "additionalProperties": False,
+}
+
+PROMPT = """You write project cards for Andreas Søgård Gabel's developer portfolio \
+(https://github.com/{user}). Match the tone and length of these existing cards exactly \
+— concrete, technical, no marketing fluff:
+
+{examples}
+
+Write the card for this project:
+
+{content}
+{thin_note}
+Return: title (short, human-readable — not the repo slug), description (English, 1-3 \
+sentences), descriptionDa (natural Danish translation, same content), tech (the main \
+technologies as short names, e.g. "Spring Boot", "Docker" — max 6)."""
+
+THIN_NOTE = ("\nNote: source material is sparse. Keep the description short and factual; "
+             "do not invent features.\n")
+
+
+def generate_card_text(client, content, examples, thin):
+    import json as _json
+
+    prompt = PROMPT.format(user=GITHUB_USER, examples=examples, content=content,
+                           thin_note=THIN_NOTE if thin else "\n")
+    msg = client.messages.create(
+        model=MODEL,
+        max_tokens=4096,
+        output_config={"format": {"type": "json_schema", "schema": CARD_TEXT_SCHEMA}},
+        messages=[{"role": "user", "content": prompt}],
+    )
+    text = next(b.text for b in msg.content if b.type == "text")
+    return _json.loads(text)
