@@ -27,3 +27,37 @@ def diff_cards(repos, cards):
     removed = [c for c in cards
                if c.get("generated") and c.get("github") and c["github"] not in repo_urls]
     return new_repos, removed
+
+
+THIN_THRESHOLD = 300  # chars of stripped README below which content is "thin"
+OVERRIDABLE = {"title", "description", "descriptionDa", "tech", "image"}
+
+
+def build_card(repo, text, overrides=None):
+    card = {
+        "slug": repo["name"].lower(),
+        "title": text["title"],
+        "description": text["description"],
+        "descriptionDa": text["descriptionDa"],
+        "tech": text["tech"],
+        "github": repo["html_url"],
+        "image": None,
+        "generated": True,
+    }
+    for key, value in (overrides or {}).items():
+        if key in OVERRIDABLE:
+            card[key] = value
+    return card
+
+
+def gather_content(repo, readme, languages):
+    parts = [
+        f"Repo name: {repo['name']}",
+        f"Repo description: {repo.get('description') or '(none)'}",
+        f"Topics: {', '.join(repo.get('topics', []))}",
+        f"Languages: {', '.join(languages) or '(unknown)'}",
+    ]
+    thin = not readme or len(readme.strip()) < THIN_THRESHOLD
+    if readme:
+        parts.append("README:\n" + readme)
+    return "\n".join(parts), thin
