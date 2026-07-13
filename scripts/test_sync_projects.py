@@ -1,5 +1,6 @@
 import base64
 
+import pytest
 import requests
 
 import sync_projects as sp
@@ -138,3 +139,10 @@ def test_fetch_languages_sorted_by_bytes(monkeypatch):
     monkeypatch.setattr(sp.requests, "get",
                         fake_get({"/languages": FakeResponse({"CSS": 10, "Java": 900})}))
     assert sp.fetch_languages("tok", "Gabel1998/a") == ["Java", "CSS"]
+
+
+def test_non_404_http_errors_propagate(monkeypatch):
+    monkeypatch.setattr(sp.requests, "get",
+                        fake_get({"/repos/Gabel1998/a/readme": FakeResponse({}, status=500)}))
+    with pytest.raises(requests.HTTPError):
+        sp.fetch_readme("tok", "Gabel1998/a")
