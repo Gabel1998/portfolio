@@ -177,3 +177,44 @@ def test_generate_card_text_thin_note_in_prompt():
     client = FakeAnthropicClient(TEXT)
     sp.generate_card_text(client, "c", "[]", thin=True)
     assert "sparse" in client.last_kwargs["messages"][0]["content"]
+
+
+def test_main_end_to_end_with_new_and_removed(monkeypatch, tmp_path):
+    projects = tmp_path / "projects.json"
+    existing = [card("handwritten"), card("dropped", generated=True)]
+    projects.write_text(json.dumps(existing))
+    monkeypatch.setattr(sp, "PROJECTS_JSON", projects)
+    monkeypatch.setenv("GITHUB_TOKEN", "tok")
+    monkeypatch.setenv("GITHUB_OUTPUT", str(tmp_path / "gh_output"))
+    monkeypatch.chdir(tmp_path)
+
+    monkeypatch.setattr(sp, "fetch_portfolio_repos",
+                        lambda tok: [repo("handwritten"), repo("newone")])
+    monkeypatch.setattr(sp, "fetch_readme", lambda tok, fn: "R" * 400)
+    monkeypatch.setattr(sp, "fetch_portfolio_yml", lambda tok, fn: {})
+    monkeypatch.setattr(sp, "fetch_languages", lambda tok, fn: ["Python"])
+    monkeypatch.setattr(sp, "Anthropic", lambda: FakeAnthropicClient(TEXT))
+
+    assert sp.main([]) == 0
+
+    result = json.loads(projects.read_text())
+    slugs = [c["slug"] for c in result]
+    assert "newone" in slugs                      # new card added
+    assert "handwritten" in slugs                 # hand-written untouched
+    assert "dropped" not in slugs                 # generated card removed
+    assert (tmp_path / "pr-body.md").exists()
+    assert "changes=true" in (tmp_path / "gh_output").read_text()
+
+
+def test_main_no_changes_writes_false(monkeypatch, tmp_path):
+    projects = tmp_path / "projects.json"
+    projects.write_text(json.dumps([card("only")]))
+    monkeypatch.setattr(sp, "PROJECTS_JSON", projects)
+    monkeypatch.setenv("GITHUB_TOKEN", "tok")
+    monkeypatch.setenv("GITHUB_OUTPUT", str(tmp_path / "gh_output"))
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(sp, "fetch_portfolio_repos", lambda tok: [repo("only")])
+
+    assert sp.main([]) == 0
+    assert "changes=false" in (tmp_path / "gh_output").read_text()
+    assert not (tmp_path / "pr-body.md").exists()
