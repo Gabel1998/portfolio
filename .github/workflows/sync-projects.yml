@@ -1,0 +1,57 @@
+name: Sync Projects
+
+on:
+  schedule:
+    - cron: "30 5 * * *"   # daily 05:30 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Skip while a sync PR is already open: re-running would regenerate the same
+      # cards (API cost) and change the diff under the reviewer's feet.
+      - name: Check for pending sync PR
+        id: pending
+        run: |
+          open=$(gh pr list --repo "$GITHUB_REPOSITORY" --head auto/sync-projects --state open --json number --jq length)
+          echo "open=$open" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install dependencies
+        if: steps.pending.outputs.open == '0'
+        run: pip install -r scripts/requirements.txt
+
+      - name: Sync project cards
+        id: sync
+        if: steps.pending.outputs.open == '0'
+        run: python scripts/sync_projects.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      # PRs created with the default GITHUB_TOKEN do not trigger the pull_request
+      # CI workflow. Acceptable: the diff is a reviewed data-file change, and deploy
+      # runs on merge to main. For CI-on-PR, add a PAT secret and pass it as `token:`.
+      - name: Open pull request
+        if: steps.pending.outputs.open == '0' && steps.sync.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: auto/sync-projects
+          title: "Sync portfolio cards from GitHub"
+          commit-message: "Sync portfolio cards from GitHub"
+          body-path: pr-body.md
+          add-paths: frontend/data/projects.json

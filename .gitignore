@@ -23,3 +23,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Python (sync script)
+__pycache__/
+*.pyc
+
+# SDD scratch
+.superpowers/
