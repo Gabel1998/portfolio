@@ -1,81 +1,153 @@
 [
-    {
-        "slug": "portfolio",
-        "title": "This Portfolio",
-        "description": "The site you're looking at. A containerized multi-project platform running on a single droplet — Docker Compose, Nginx reverse proxy, CI/CD via GitHub Actions, and auto-generated infrastructure documentation.",
-        "descriptionDa": "Siden du kigger på nu. En containeriseret multi-projekt platform der kører på en enkelt droplet — Docker Compose, Nginx reverse proxy, CI/CD via GitHub Actions og auto-genereret infrastruktur-dokumentation.",
-        "tech": ["Docker", "Nginx", "GitHub Actions", "Spring Boot", "Three.js", "DigitalOcean"],
-        "github": "https://github.com/Gabel1998/portfolio",
-        "infrastructurePath": "/infrastructure.html",
-        "image": null
-    },
-    {
-        "slug": "gabelgundogs",
-        "title": "Gabel Gundogs",
-        "description": "A customer website + CMS I built and operate in production for a Danish gundog kennel. Deliberately right-sized: Next.js with embedded Payload CMS, SQLite, and a single Azure VM behind Caddy with automatic TLS. Delivery runs through a staged GitHub Actions pipeline — lint, typecheck, unit tests, Playwright E2E, and a Docker build gate before images ship to GHCR — and nightly backups go to Azure Blob Storage with a documented, tested restore procedure.",
-        "descriptionDa": "Et kundesite + CMS, som jeg har bygget og driver i produktion for en dansk jagthundekennel. Bevidst right-sized: Next.js med indbygget Payload CMS, SQLite og én Azure VM bag Caddy med automatisk TLS. Leverancen kører gennem en staged GitHub Actions-pipeline — lint, typecheck, unit tests, Playwright E2E og en Docker build-gate før images sendes til GHCR — og natlige backups går til Azure Blob Storage med en dokumenteret, afprøvet restore-procedure.",
-        "tech": ["Next.js", "TypeScript", "Payload CMS", "SQLite", "Docker Compose", "Caddy", "GitHub Actions", "Azure"],
-        "liveUrl": "https://gabelgundogs.dk",
-        "image": null
-    },
-    {
-        "slug": "monkknows",
-        "title": "MonkKnows",
-        "description": "A legacy application I modernized into production with a full DevOps toolchain: containerized with Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image and dependency scanning, and a Prometheus + Grafana observability stack with availability and SLA tracking. Built collaboratively with a PR-based workflow, ADRs, and runbooks, and deployed to Azure VMs. The platform has since been decommissioned, but the repository preserves the full CI/CD, observability, and team-workflow history.",
-        "descriptionDa": "En legacy-applikation jeg moderniserede til produktion med en fuld DevOps-værktøjskæde: containeriseret med Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image- og dependency-scanning og en Prometheus + Grafana observability-stak med availability- og SLA-måling. Bygget i samarbejde med PR-baseret workflow, ADRs og runbooks, og deployet til Azure-VMs. Platformen er sidenhen nedlagt, men repoet bevarer hele CI/CD-, observability- og team-workflow-historikken.",
-        "tech": ["Ruby", "PostgreSQL", "Docker Compose", "GitHub Actions", "Prometheus", "Grafana", "Azure"],
-        "github": "https://github.com/nasOps/MonkKnows",
-        "image": null
-    },
-    {
-        "slug": "raidfines",
-        "title": "Raid Fines",
-        "description": "A full-stack World of Warcraft raid-fine platform I operate in production: a React + TypeScript SPA and a Spring Boot (Java 21) API with Battle.net OAuth2/JWT login, Warcraft Logs GraphQL integration, MobilePay payments, and an in-game Lua addon. Containerized and deployed to the live droplet via GitHub Actions.",
-        "descriptionDa": "En full-stack World of Warcraft raid-bødeplatform, som jeg driver i produktion: en React + TypeScript SPA og et Spring Boot (Java 21) API med Battle.net OAuth2/JWT-login, Warcraft Logs GraphQL-integration, MobilePay-betaling og en in-game Lua-addon. Containeriseret og deployet til den live droplet via GitHub Actions.",
-        "tech": ["React", "TypeScript", "Spring Boot", "Java 21", "OAuth2 / JWT", "MySQL", "Docker", "GitHub Actions"],
-        "github": "https://github.com/Gabel1998/raid-fines",
-        "showroomPath": "/raidfines",
-        "image": null
-    },
-    {
-        "slug": "talent-api",
-        "title": "Talent API",
-        "description": "A Spring Boot (Java 21) REST API built for a Danish internship challenge — but the real story is the delivery pipeline: GitHub Actions with quality gates (JaCoCo, Checkstyle, SpotBugs), images published to GHCR, and an automated deploy to the live droplet. Documented with Swagger / OpenAPI.",
-        "descriptionDa": "Et Spring Boot (Java 21) REST API bygget til en dansk praktik-udfordring — men den egentlige historie er leverancepipelinen: GitHub Actions med kvalitetsgates (JaCoCo, Checkstyle, SpotBugs), images publiceret til GHCR og en automatisk deploy til den live droplet. Dokumenteret med Swagger / OpenAPI.",
-        "tech": ["Java 21", "Spring Boot", "GitHub Actions", "GHCR", "JaCoCo", "Swagger / OpenAPI", "Docker"],
-        "github": "https://github.com/Gabel1998/talent-api",
-        "showroomPath": "/talent-api",
-        "image": null
-    },
-    {
-        "slug": "insolvens-intelligence",
-        "title": "Insolvens Intelligence",
-        "description": "A hybrid RAG system for insolvency law research. Combines graph-RAG (company ownership structures from CVR) with vector-RAG (Danish court rulings) and transaction analysis via an AI agent in n8n. Neo4j serves as both graph and vector database — 61 companies, 989 rulings, and 46,000+ embedded chunks.",
-        "descriptionDa": "Et hybrid RAG-system til insolvensretlig research. Kombinerer graf-RAG (ejerskabsstrukturer fra CVR) med vektor-RAG (danske domstolsafgørelser) og transaktionsanalyse via en AI-agent i n8n. Neo4j fungerer som både graf- og vektordatabase — 61 selskaber, 989 afgørelser og 46.000+ embeddede chunks.",
-        "tech": ["n8n", "Neo4j", "Ollama", "Python", "RAG", "Graph DB"],
-        "github": "https://github.com/Gabel1998/insolvens-intelligence",
-        "showroomPath": "/insolvens-intelligence.html",
-        "status": "in-development",
-        "image": null
-    },
-    {
-        "slug": "webcrawler",
-        "title": "Web Crawler",
-        "description": "A configurable web crawler with visual output. Crawls a target domain, maps URL relationships, and renders an interactive D3.js network visualization.",
-        "descriptionDa": "En konfigurerbar webcrawler med visuel output. Crawler et måldomæne, kortlægger URL-relationer og renderer en interaktiv D3.js netværksvisualisering.",
-        "tech": ["Java", "Spring Boot", "Jsoup", "Selenium", "D3.js", "MySQL"],
-        "github": "https://github.com/Gabel1998/webCrawler",
-        "showroomPath": "/webcrawler",
-        "image": null
-    },
-    {
-        "slug": "beskyttelsesrum",
-        "title": "Beskyttelsesrum Danmark",
-        "description": "An interactive overview of Danish civil protection shelters. Browse municipalities, view capacity reports, explore an interactive map, and manage maintenance schedules.",
-        "descriptionDa": "Et interaktivt overblik over danske beskyttelsesrum. Gennemse kommuner, se kapacitetsrapporter, udforsk et interaktivt kort og administrer vedligeholdelsesplaner.",
-        "tech": ["Java", "Spring Boot", "JPA", "Leaflet.js", "Vanilla JS", "H2"],
-        "github": "https://github.com/Gabel1998/beskyttelsesrum",
-        "showroomPath": "/beskyttelsesrum",
-        "image": null
-    }
+  {
+    "slug": "portfolio",
+    "title": "This Portfolio",
+    "description": "The site you're looking at. A containerized multi-project platform running on a single droplet — Docker Compose, Nginx reverse proxy, CI/CD via GitHub Actions, and auto-generated infrastructure documentation.",
+    "descriptionDa": "Siden du kigger på nu. En containeriseret multi-projekt platform der kører på en enkelt droplet — Docker Compose, Nginx reverse proxy, CI/CD via GitHub Actions og auto-genereret infrastruktur-dokumentation.",
+    "tech": [
+      "Docker",
+      "Nginx",
+      "GitHub Actions",
+      "Spring Boot",
+      "Three.js",
+      "DigitalOcean"
+    ],
+    "github": "https://github.com/Gabel1998/portfolio",
+    "infrastructurePath": "/infrastructure.html",
+    "image": null
+  },
+  {
+    "slug": "gabelgundogs",
+    "title": "Gabel Gundogs",
+    "description": "A customer website + CMS I built and operate in production for a Danish gundog kennel. Deliberately right-sized: Next.js with embedded Payload CMS, SQLite, and a single Azure VM behind Caddy with automatic TLS. Delivery runs through a staged GitHub Actions pipeline — lint, typecheck, unit tests, Playwright E2E, and a Docker build gate before images ship to GHCR — and nightly backups go to Azure Blob Storage with a documented, tested restore procedure.",
+    "descriptionDa": "Et kundesite + CMS, som jeg har bygget og driver i produktion for en dansk jagthundekennel. Bevidst right-sized: Next.js med indbygget Payload CMS, SQLite og én Azure VM bag Caddy med automatisk TLS. Leverancen kører gennem en staged GitHub Actions-pipeline — lint, typecheck, unit tests, Playwright E2E og en Docker build-gate før images sendes til GHCR — og natlige backups går til Azure Blob Storage med en dokumenteret, afprøvet restore-procedure.",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Payload CMS",
+      "SQLite",
+      "Docker Compose",
+      "Caddy",
+      "GitHub Actions",
+      "Azure"
+    ],
+    "liveUrl": "https://gabelgundogs.dk",
+    "image": null
+  },
+  {
+    "slug": "monkknows",
+    "title": "MonkKnows",
+    "description": "A legacy application I modernized into production with a full DevOps toolchain: containerized with Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image and dependency scanning, and a Prometheus + Grafana observability stack with availability and SLA tracking. Built collaboratively with a PR-based workflow, ADRs, and runbooks, and deployed to Azure VMs. The platform has since been decommissioned, but the repository preserves the full CI/CD, observability, and team-workflow history.",
+    "descriptionDa": "En legacy-applikation jeg moderniserede til produktion med en fuld DevOps-værktøjskæde: containeriseret med Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image- og dependency-scanning og en Prometheus + Grafana observability-stak med availability- og SLA-måling. Bygget i samarbejde med PR-baseret workflow, ADRs og runbooks, og deployet til Azure-VMs. Platformen er sidenhen nedlagt, men repoet bevarer hele CI/CD-, observability- og team-workflow-historikken.",
+    "tech": [
+      "Ruby",
+      "PostgreSQL",
+      "Docker Compose",
+      "GitHub Actions",
+      "Prometheus",
+      "Grafana",
+      "Azure"
+    ],
+    "github": "https://github.com/nasOps/MonkKnows",
+    "image": null
+  },
+  {
+    "slug": "raidfines",
+    "title": "Raid Fines",
+    "description": "A full-stack World of Warcraft raid-fine platform I operate in production: a React + TypeScript SPA and a Spring Boot (Java 21) API with Battle.net OAuth2/JWT login, Warcraft Logs GraphQL integration, MobilePay payments, and an in-game Lua addon. Containerized and deployed to the live droplet via GitHub Actions.",
+    "descriptionDa": "En full-stack World of Warcraft raid-bødeplatform, som jeg driver i produktion: en React + TypeScript SPA og et Spring Boot (Java 21) API med Battle.net OAuth2/JWT-login, Warcraft Logs GraphQL-integration, MobilePay-betaling og en in-game Lua-addon. Containeriseret og deployet til den live droplet via GitHub Actions.",
+    "tech": [
+      "React",
+      "TypeScript",
+      "Spring Boot",
+      "Java 21",
+      "OAuth2 / JWT",
+      "MySQL",
+      "Docker",
+      "GitHub Actions"
+    ],
+    "github": "https://github.com/Gabel1998/raid-fines",
+    "showroomPath": "/raidfines",
+    "image": null
+  },
+  {
+    "slug": "talent-api",
+    "title": "Talent API",
+    "description": "A Spring Boot (Java 21) REST API built for a Danish internship challenge — but the real story is the delivery pipeline: GitHub Actions with quality gates (JaCoCo, Checkstyle, SpotBugs), images published to GHCR, and an automated deploy to the live droplet. Documented with Swagger / OpenAPI.",
+    "descriptionDa": "Et Spring Boot (Java 21) REST API bygget til en dansk praktik-udfordring — men den egentlige historie er leverancepipelinen: GitHub Actions med kvalitetsgates (JaCoCo, Checkstyle, SpotBugs), images publiceret til GHCR og en automatisk deploy til den live droplet. Dokumenteret med Swagger / OpenAPI.",
+    "tech": [
+      "Java 21",
+      "Spring Boot",
+      "GitHub Actions",
+      "GHCR",
+      "JaCoCo",
+      "Swagger / OpenAPI",
+      "Docker"
+    ],
+    "github": "https://github.com/Gabel1998/talent-api",
+    "showroomPath": "/talent-api",
+    "image": null
+  },
+  {
+    "slug": "insolvens-intelligence",
+    "title": "Insolvens Intelligence",
+    "description": "A hybrid RAG system for insolvency law research. Combines graph-RAG (company ownership structures from CVR) with vector-RAG (Danish court rulings) and transaction analysis via an AI agent in n8n. Neo4j serves as both graph and vector database — 61 companies, 989 rulings, and 46,000+ embedded chunks.",
+    "descriptionDa": "Et hybrid RAG-system til insolvensretlig research. Kombinerer graf-RAG (ejerskabsstrukturer fra CVR) med vektor-RAG (danske domstolsafgørelser) og transaktionsanalyse via en AI-agent i n8n. Neo4j fungerer som både graf- og vektordatabase — 61 selskaber, 989 afgørelser og 46.000+ embeddede chunks.",
+    "tech": [
+      "n8n",
+      "Neo4j",
+      "Ollama",
+      "Python",
+      "RAG",
+      "Graph DB"
+    ],
+    "github": "https://github.com/Gabel1998/insolvens-intelligence",
+    "showroomPath": "/insolvens-intelligence.html",
+    "status": "in-development",
+    "image": null
+  },
+  {
+    "slug": "webcrawler",
+    "title": "Web Crawler",
+    "description": "A configurable web crawler with visual output. Crawls a target domain, maps URL relationships, and renders an interactive D3.js network visualization.",
+    "descriptionDa": "En konfigurerbar webcrawler med visuel output. Crawler et måldomæne, kortlægger URL-relationer og renderer en interaktiv D3.js netværksvisualisering.",
+    "tech": [
+      "Java",
+      "Spring Boot",
+      "Jsoup",
+      "Selenium",
+      "D3.js",
+      "MySQL"
+    ],
+    "github": "https://github.com/Gabel1998/webCrawler",
+    "showroomPath": "/webcrawler",
+    "image": null
+  },
+  {
+    "slug": "beskyttelsesrum",
+    "title": "Beskyttelsesrum Danmark",
+    "description": "An interactive overview of Danish civil protection shelters. Browse municipalities, view capacity reports, explore an interactive map, and manage maintenance schedules.",
+    "descriptionDa": "Et interaktivt overblik over danske beskyttelsesrum. Gennemse kommuner, se kapacitetsrapporter, udforsk et interaktivt kort og administrer vedligeholdelsesplaner.",
+    "tech": [
+      "Java",
+      "Spring Boot",
+      "JPA",
+      "Leaflet.js",
+      "Vanilla JS",
+      "H2"
+    ],
+    "github": "https://github.com/Gabel1998/beskyttelsesrum",
+    "showroomPath": "/beskyttelsesrum",
+    "image": null
+  },
+  {
+    "slug": "sync-test-scratch",
+    "title": "Sync Test Scratch",
+    "description": "A scratch repository used to validate the portfolio sync pipeline. No application code — it exists to test that repos are picked up and rendered correctly.",
+    "descriptionDa": "Et scratch-repo brugt til at validere portfolio-sync-pipelinen. Ingen applikationskode — det findes for at teste, at repos bliver opsamlet og renderet korrekt.",
+    "tech": [],
+    "github": "https://github.com/Gabel1998/sync-test-scratch",
+    "image": null,
+    "generated": true
+  }
 ]
