@@ -10,6 +10,15 @@
         "image": null
     },
     {
+        "slug": "gabelgundogs",
+        "title": "Gabel Gundogs",
+        "description": "A customer website + CMS I built and operate in production for a Danish gundog kennel. Deliberately right-sized: Next.js with embedded Payload CMS, SQLite, and a single Azure VM behind Caddy with automatic TLS. Delivery runs through a staged GitHub Actions pipeline — lint, typecheck, unit tests, Playwright E2E, and a Docker build gate before images ship to GHCR — and nightly backups go to Azure Blob Storage with a documented, tested restore procedure.",
+        "descriptionDa": "Et kundesite + CMS, som jeg har bygget og driver i produktion for en dansk jagthundekennel. Bevidst right-sized: Next.js med indbygget Payload CMS, SQLite og én Azure VM bag Caddy med automatisk TLS. Leverancen kører gennem en staged GitHub Actions-pipeline — lint, typecheck, unit tests, Playwright E2E og en Docker build-gate før images sendes til GHCR — og natlige backups går til Azure Blob Storage med en dokumenteret, afprøvet restore-procedure.",
+        "tech": ["Next.js", "TypeScript", "Payload CMS", "SQLite", "Docker Compose", "Caddy", "GitHub Actions", "Azure"],
+        "liveUrl": "https://gabelgundogs.dk",
+        "image": null
+    },
+    {
         "slug": "monkknows",
         "title": "MonkKnows",
         "description": "A legacy application I modernized into production with a full DevOps toolchain: containerized with Docker Compose, CI/CD via GitHub Actions (lint, audit, tests, E2E), image and dependency scanning, and a Prometheus + Grafana observability stack with availability and SLA tracking. Built collaboratively with a PR-based workflow, ADRs, and runbooks, and deployed to Azure VMs. The platform has since been decommissioned, but the repository preserves the full CI/CD, observability, and team-workflow history.",
