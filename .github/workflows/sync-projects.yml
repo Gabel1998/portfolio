@@ -1,0 +1,42 @@
+name: Sync Projects
+
+on:
+  schedule:
+    - cron: "30 5 * * *"   # daily 05:30 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Sync project cards
+        id: sync
+        run: python scripts/sync_projects.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Open pull request
+        if: steps.sync.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: auto/sync-projects
+          title: "Sync portfolio cards from GitHub"
+          commit-message: "Sync portfolio cards from GitHub"
+          body-path: pr-body.md
+          add-paths: frontend/data/projects.json
