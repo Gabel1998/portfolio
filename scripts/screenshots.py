@@ -27,11 +27,13 @@ def capture_screenshot(url, dest):
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        page = browser.new_page(viewport=VIEWPORT)
-        page.goto(url, wait_until="networkidle", timeout=30_000)
-        page.wait_for_timeout(2_000)  # settle SPAs after networkidle
-        page.screenshot(path=str(dest))
-        browser.close()
+        try:
+            page = browser.new_page(viewport=VIEWPORT)
+            page.goto(url, wait_until="networkidle", timeout=30_000)
+            page.wait_for_timeout(2_000)  # settle SPAs after networkidle
+            page.screenshot(path=str(dest))
+        finally:
+            browser.close()
 
 
 def download_og_image(github_url, dest):
