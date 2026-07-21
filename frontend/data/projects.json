@@ -14,7 +14,7 @@
     ],
     "github": "https://github.com/Gabel1998/portfolio",
     "infrastructurePath": "/infrastructure.html",
-    "image": null,
+    "image": "/images/projects/portfolio.png",
     "liveUrl": "https://andreasgabel.dk"
   },
   {
@@ -50,7 +50,7 @@
       "Azure"
     ],
     "github": "https://github.com/nasOps/MonkKnows",
-    "image": null
+    "image": "/images/projects/monkknows.png"
   },
   {
     "slug": "raidfines",
@@ -69,7 +69,7 @@
     ],
     "github": "https://github.com/Gabel1998/raid-fines",
     "showroomPath": "/raidfines",
-    "image": null,
+    "image": "/images/projects/raidfines.png",
     "liveUrl": "https://andreasgabel.dk/raidfines/"
   },
   {
@@ -88,7 +88,7 @@
     ],
     "github": "https://github.com/Gabel1998/talent-api",
     "showroomPath": "/talent-api",
-    "image": null,
+    "image": "/images/projects/talent-api.png",
     "liveUrl": "https://andreasgabel.dk/talent-api/"
   },
   {
@@ -107,7 +107,7 @@
     "github": "https://github.com/Gabel1998/insolvens-intelligence",
     "showroomPath": "/insolvens-intelligence.html",
     "status": "in-development",
-    "image": null
+    "image": "/images/projects/insolvens-intelligence.png"
   },
   {
     "slug": "webcrawler",
@@ -124,7 +124,7 @@
     ],
     "github": "https://github.com/Gabel1998/webCrawler",
     "showroomPath": "/webcrawler",
-    "image": null,
+    "image": "/images/projects/webcrawler.png",
     "liveUrl": "https://andreasgabel.dk/webcrawler/"
   },
   {
@@ -142,7 +142,7 @@
     ],
     "github": "https://github.com/Gabel1998/beskyttelsesrum",
     "showroomPath": "/beskyttelsesrum",
-    "image": null,
+    "image": "/images/projects/beskyttelsesrum.png",
     "liveUrl": "https://andreasgabel.dk/beskyttelsesrum/"
   }
 ]
