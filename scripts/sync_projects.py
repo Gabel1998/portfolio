@@ -15,6 +15,7 @@ from pathlib import Path
 import requests
 import yaml
 from anthropic import Anthropic
+from screenshots import fill_images
 
 GITHUB_USER = "Gabel1998"
 API = "https://api.github.com"
@@ -38,10 +39,10 @@ def diff_cards(repos, cards):
 
 
 THIN_THRESHOLD = 300  # chars of stripped README below which content is "thin"
-OVERRIDABLE = {"title", "description", "descriptionDa", "tech", "image"}
+OVERRIDABLE = {"title", "description", "descriptionDa", "tech", "image", "liveUrl"}
 
 
-def build_card(repo, text, overrides=None):
+def build_card(repo, text, overrides=None, languages=None):
     card = {
         "slug": repo["name"].lower(),
         "title": text["title"],
@@ -49,8 +50,10 @@ def build_card(repo, text, overrides=None):
         "descriptionDa": text["descriptionDa"],
         "tech": text["tech"],
         "github": repo["html_url"],
+        "liveUrl": repo.get("homepage") or None,
         "image": None,
         "generated": True,
+        "techBasis": tech_basis(repo, languages or []),
     }
     for key, value in (overrides or {}).items():
         if key in OVERRIDABLE:
@@ -69,6 +72,11 @@ def gather_content(repo, readme, languages):
     if readme:
         parts.append("README:\n" + readme)
     return "\n".join(parts), thin
+
+
+def tech_basis(repo, languages):
+    """Sorted snapshot of topics + languages; used to detect stack changes."""
+    return sorted(set(repo.get("topics", [])) | set(languages))
 
 
 def gh_get(path, token, **params):
@@ -167,6 +175,61 @@ def generate_card_text(client, content, examples, thin):
     return _json.loads(text)
 
 
+TECH_SCHEMA = {
+    "type": "object",
+    "properties": {"tech": {"type": "array", "items": {"type": "string"}}},
+    "required": ["tech"],
+    "additionalProperties": False,
+}
+
+TECH_PROMPT = """The tech stack of a portfolio project changed on GitHub. Curate an updated \
+tech list in the same style as the current one (short display names like "Spring Boot", \
+"Docker" — max 6). Keep entries that are still accurate; add/remove based on the new data.
+
+Current tech list: {current}
+New GitHub topics + languages: {basis}
+
+Return only the updated tech list."""
+
+
+def recurate_tech(client, current_tech, basis):
+    msg = client.messages.create(
+        model=MODEL,
+        max_tokens=1024,
+        output_config={"format": {"type": "json_schema", "schema": TECH_SCHEMA}},
+        messages=[{"role": "user", "content": TECH_PROMPT.format(
+            current=json.dumps(current_tech, ensure_ascii=False),
+            basis=json.dumps(basis, ensure_ascii=False))}],
+    )
+    text = next(b.text for b in msg.content if b.type == "text")
+    return json.loads(text)["tech"]
+
+
+def refresh_tech_lists(cards, repos_by_url, token, client_factory):
+    """Re-curate tech on generated cards whose topics+languages changed.
+
+    A `tech` override in .portfolio.yml wins: the card is left untouched.
+    client_factory is called lazily, at most once.
+    """
+    summary, client = [], None
+    for card in cards:
+        if not card.get("generated") or card.get("github") not in repos_by_url:
+            continue
+        repo = repos_by_url[card["github"]]
+        languages = fetch_languages(token, repo["full_name"])
+        basis = tech_basis(repo, languages)
+        if basis == card.get("techBasis"):
+            continue
+        if "tech" in fetch_portfolio_yml(token, repo["full_name"]):
+            continue
+        if client is None:
+            client = client_factory()
+        card["tech"] = recurate_tech(client, card["tech"], basis)
+        card["techBasis"] = basis
+        summary.append(f"- 🔄 Tech updated for `{card['slug']}` (stack changed on GitHub)")
+    return summary
+
+
 def write_output(changes):
     out = os.environ.get("GITHUB_OUTPUT")
     if out:
@@ -200,13 +263,20 @@ def main(argv=None):
             overrides = fetch_portfolio_yml(token, repo["full_name"])
             content, thin = gather_content(repo, readme, languages)
             text = generate_card_text(client, content, examples, thin)
-            cards.append(build_card(repo, text, overrides))
+            cards.append(build_card(repo, text, overrides, languages))
             note = " — ⚠️ thin README, review the text extra carefully" if thin else ""
             summary.append(f"- ➕ New card: `{repo['name']}`{note}")
 
     removed_urls = {c["github"] for c in removed}
     cards = [c for c in cards if not (c.get("generated") and c.get("github") in removed_urls)]
     summary.extend(f"- ➖ Removed: `{c['slug']}` (portfolio topic dropped)" for c in removed)
+
+    repos_by_url = {r["html_url"]: r for r in repos}
+    summary.extend(refresh_tech_lists(cards, repos_by_url, token, Anthropic))
+    if args.dry_run:
+        print("(dry-run: image filling skipped)")
+    else:
+        summary.extend(fill_images(cards))
 
     if not summary:
         print("No changes.")
