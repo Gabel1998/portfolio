@@ -225,3 +225,26 @@ def test_main_no_changes_writes_false(monkeypatch, tmp_path):
     assert sp.main([]) == 0
     assert "changes=false" in (tmp_path / "gh_output").read_text()
     assert not (tmp_path / "pr-body.md").exists()
+
+
+def test_tech_basis_is_sorted_union():
+    r = {**repo("x"), "topics": ["portfolio", "docker"]}
+    assert sp.tech_basis(r, ["Java", "docker"]) == ["Java", "docker", "portfolio"]
+
+
+def test_build_card_sets_live_url_from_homepage():
+    r = {**repo("x"), "homepage": "https://andreasgabel.dk/x/"}
+    c = sp.build_card(r, TEXT, None)
+    assert c["liveUrl"] == "https://andreasgabel.dk/x/"
+
+
+def test_build_card_live_url_none_and_override_wins():
+    assert sp.build_card(repo("x"), TEXT, None)["liveUrl"] is None
+    c = sp.build_card(repo("x"), TEXT, {"liveUrl": "https://manual.dk"})
+    assert c["liveUrl"] == "https://manual.dk"
+
+
+def test_build_card_sets_tech_basis():
+    r = {**repo("x"), "topics": ["portfolio"]}
+    c = sp.build_card(r, TEXT, None, languages=["Python"])
+    assert c["techBasis"] == ["Python", "portfolio"]

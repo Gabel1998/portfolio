@@ -38,10 +38,10 @@ def diff_cards(repos, cards):
 
 
 THIN_THRESHOLD = 300  # chars of stripped README below which content is "thin"
-OVERRIDABLE = {"title", "description", "descriptionDa", "tech", "image"}
+OVERRIDABLE = {"title", "description", "descriptionDa", "tech", "image", "liveUrl"}
 
 
-def build_card(repo, text, overrides=None):
+def build_card(repo, text, overrides=None, languages=None):
     card = {
         "slug": repo["name"].lower(),
         "title": text["title"],
@@ -49,8 +49,10 @@ def build_card(repo, text, overrides=None):
         "descriptionDa": text["descriptionDa"],
         "tech": text["tech"],
         "github": repo["html_url"],
+        "liveUrl": repo.get("homepage") or None,
         "image": None,
         "generated": True,
+        "techBasis": tech_basis(repo, languages or []),
     }
     for key, value in (overrides or {}).items():
         if key in OVERRIDABLE:
@@ -69,6 +71,11 @@ def gather_content(repo, readme, languages):
     if readme:
         parts.append("README:\n" + readme)
     return "\n".join(parts), thin
+
+
+def tech_basis(repo, languages):
+    """Sorted snapshot of topics + languages; used to detect stack changes."""
+    return sorted(set(repo.get("topics", [])) | set(languages))
 
 
 def gh_get(path, token, **params):
@@ -200,7 +207,7 @@ def main(argv=None):
             overrides = fetch_portfolio_yml(token, repo["full_name"])
             content, thin = gather_content(repo, readme, languages)
             text = generate_card_text(client, content, examples, thin)
-            cards.append(build_card(repo, text, overrides))
+            cards.append(build_card(repo, text, overrides, languages))
             note = " — ⚠️ thin README, review the text extra carefully" if thin else ""
             summary.append(f"- ➕ New card: `{repo['name']}`{note}")
 
