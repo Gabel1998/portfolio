@@ -35,6 +35,10 @@ jobs:
         if: steps.pending.outputs.open == '0'
         run: pip install -r scripts/requirements.txt
 
+      - name: Install chromium for screenshots
+        if: steps.pending.outputs.open == '0'
+        run: python -m playwright install --with-deps chromium
+
       - name: Sync project cards
         id: sync
         if: steps.pending.outputs.open == '0'
@@ -54,4 +58,6 @@ jobs:
           title: "Sync portfolio cards from GitHub"
           commit-message: "Sync portfolio cards from GitHub"
           body-path: pr-body.md
-          add-paths: frontend/data/projects.json
+          add-paths: |
+            frontend/data/projects.json
+            frontend/images/projects/
