@@ -221,6 +221,8 @@ def test_main_no_changes_writes_false(monkeypatch, tmp_path):
     monkeypatch.setenv("GITHUB_OUTPUT", str(tmp_path / "gh_output"))
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(sp, "fetch_portfolio_repos", lambda tok: [repo("only")])
+    monkeypatch.setattr(sp, "fill_images", lambda cards: [])
+    monkeypatch.setattr(sp, "refresh_tech_lists", lambda *a: [])
 
     assert sp.main([]) == 0
     assert "changes=false" in (tmp_path / "gh_output").read_text()
@@ -308,3 +310,44 @@ def test_refresh_ignores_handwritten_and_unmatched(monkeypatch):
     summary = sp.refresh_tech_lists([hand, orphan], {}, "tok",
                                     lambda: (_ for _ in ()).throw(AssertionError("no client")))
     assert summary == []
+
+
+def test_main_fills_images_and_refreshes_tech(monkeypatch, tmp_path):
+    projects = tmp_path / "projects.json"
+    projects.write_text(json.dumps([card("hand")]))
+    monkeypatch.setattr(sp, "PROJECTS_JSON", projects)
+    monkeypatch.setenv("GITHUB_TOKEN", "tok")
+    monkeypatch.delenv("GITHUB_OUTPUT", raising=False)
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(sp, "fetch_portfolio_repos", lambda tok: [repo("hand")])
+
+    def fake_fill(cards):
+        for c in cards:
+            if c.get("image") is None:
+                c["image"] = f"/images/projects/{c['slug']}.png"
+        return ["- 🖼 Added screenshot for `hand`"]
+
+    monkeypatch.setattr(sp, "fill_images", fake_fill)
+    monkeypatch.setattr(sp, "refresh_tech_lists", lambda *a: ["- 🔄 Tech updated for `x`"])
+
+    assert sp.main([]) == 0
+    result = json.loads(projects.read_text())
+    assert result[0]["image"] == "/images/projects/hand.png"
+    body = (tmp_path / "pr-body.md").read_text()
+    assert "🖼" in body and "🔄" in body
+
+
+def test_main_dry_run_skips_image_filling(monkeypatch, tmp_path, capsys):
+    projects = tmp_path / "projects.json"
+    projects.write_text(json.dumps([card("hand")]))
+    monkeypatch.setattr(sp, "PROJECTS_JSON", projects)
+    monkeypatch.setenv("GITHUB_TOKEN", "tok")
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(sp, "fetch_portfolio_repos", lambda tok: [repo("hand")])
+    monkeypatch.setattr(sp, "fill_images",
+                        lambda cards: (_ for _ in ()).throw(AssertionError("must not run")))
+    monkeypatch.setattr(sp, "refresh_tech_lists", lambda *a: ["- 🔄 Tech updated for `x`"])
+
+    assert sp.main(["--dry-run"]) == 0
+    assert "dry-run: image filling skipped" in capsys.readouterr().out
+    assert json.loads(projects.read_text())[0]["image"] is None  # nothing written

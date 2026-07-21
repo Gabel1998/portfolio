@@ -15,6 +15,7 @@ from pathlib import Path
 import requests
 import yaml
 from anthropic import Anthropic
+from screenshots import fill_images
 
 GITHUB_USER = "Gabel1998"
 API = "https://api.github.com"
@@ -269,6 +270,13 @@ def main(argv=None):
     removed_urls = {c["github"] for c in removed}
     cards = [c for c in cards if not (c.get("generated") and c.get("github") in removed_urls)]
     summary.extend(f"- ➖ Removed: `{c['slug']}` (portfolio topic dropped)" for c in removed)
+
+    repos_by_url = {r["html_url"]: r for r in repos}
+    summary.extend(refresh_tech_lists(cards, repos_by_url, token, Anthropic))
+    if args.dry_run:
+        print("(dry-run: image filling skipped)")
+    else:
+        summary.extend(fill_images(cards))
 
     if not summary:
         print("No changes.")
