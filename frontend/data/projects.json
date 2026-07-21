@@ -14,7 +14,8 @@
     ],
     "github": "https://github.com/Gabel1998/portfolio",
     "infrastructurePath": "/infrastructure.html",
-    "image": null
+    "image": null,
+    "liveUrl": "https://andreasgabel.dk"
   },
   {
     "slug": "gabelgundogs",
@@ -68,7 +69,8 @@
     ],
     "github": "https://github.com/Gabel1998/raid-fines",
     "showroomPath": "/raidfines",
-    "image": null
+    "image": null,
+    "liveUrl": "https://andreasgabel.dk/raidfines/"
   },
   {
     "slug": "talent-api",
@@ -86,7 +88,8 @@
     ],
     "github": "https://github.com/Gabel1998/talent-api",
     "showroomPath": "/talent-api",
-    "image": null
+    "image": null,
+    "liveUrl": "https://andreasgabel.dk/talent-api/"
   },
   {
     "slug": "insolvens-intelligence",
@@ -121,7 +124,8 @@
     ],
     "github": "https://github.com/Gabel1998/webCrawler",
     "showroomPath": "/webcrawler",
-    "image": null
+    "image": null,
+    "liveUrl": "https://andreasgabel.dk/webcrawler/"
   },
   {
     "slug": "beskyttelsesrum",
@@ -138,6 +142,7 @@
     ],
     "github": "https://github.com/Gabel1998/beskyttelsesrum",
     "showroomPath": "/beskyttelsesrum",
-    "image": null
+    "image": null,
+    "liveUrl": "https://andreasgabel.dk/beskyttelsesrum/"
   }
 ]
