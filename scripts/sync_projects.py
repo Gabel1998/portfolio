@@ -174,6 +174,61 @@ def generate_card_text(client, content, examples, thin):
     return _json.loads(text)
 
 
+TECH_SCHEMA = {
+    "type": "object",
+    "properties": {"tech": {"type": "array", "items": {"type": "string"}}},
+    "required": ["tech"],
+    "additionalProperties": False,
+}
+
+TECH_PROMPT = """The tech stack of a portfolio project changed on GitHub. Curate an updated \
+tech list in the same style as the current one (short display names like "Spring Boot", \
+"Docker" — max 6). Keep entries that are still accurate; add/remove based on the new data.
+
+Current tech list: {current}
+New GitHub topics + languages: {basis}
+
+Return only the updated tech list."""
+
+
+def recurate_tech(client, current_tech, basis):
+    msg = client.messages.create(
+        model=MODEL,
+        max_tokens=1024,
+        output_config={"format": {"type": "json_schema", "schema": TECH_SCHEMA}},
+        messages=[{"role": "user", "content": TECH_PROMPT.format(
+            current=json.dumps(current_tech, ensure_ascii=False),
+            basis=json.dumps(basis, ensure_ascii=False))}],
+    )
+    text = next(b.text for b in msg.content if b.type == "text")
+    return json.loads(text)["tech"]
+
+
+def refresh_tech_lists(cards, repos_by_url, token, client_factory):
+    """Re-curate tech on generated cards whose topics+languages changed.
+
+    A `tech` override in .portfolio.yml wins: the card is left untouched.
+    client_factory is called lazily, at most once.
+    """
+    summary, client = [], None
+    for card in cards:
+        if not card.get("generated") or card.get("github") not in repos_by_url:
+            continue
+        repo = repos_by_url[card["github"]]
+        languages = fetch_languages(token, repo["full_name"])
+        basis = tech_basis(repo, languages)
+        if basis == card.get("techBasis"):
+            continue
+        if "tech" in fetch_portfolio_yml(token, repo["full_name"]):
+            continue
+        if client is None:
+            client = client_factory()
+        card["tech"] = recurate_tech(client, card["tech"], basis)
+        card["techBasis"] = basis
+        summary.append(f"- 🔄 Tech updated for `{card['slug']}` (stack changed on GitHub)")
+    return summary
+
+
 def write_output(changes):
     out = os.environ.get("GITHUB_OUTPUT")
     if out:

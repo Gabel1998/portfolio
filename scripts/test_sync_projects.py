@@ -248,3 +248,63 @@ def test_build_card_sets_tech_basis():
     r = {**repo("x"), "topics": ["portfolio"]}
     c = sp.build_card(r, TEXT, None, languages=["Python"])
     assert c["techBasis"] == ["Python", "portfolio"]
+
+
+def gen_card(slug, tech=None, basis=None):
+    c = card(slug, generated=True)
+    c["tech"] = tech or ["Java"]
+    if basis is not None:
+        c["techBasis"] = basis
+    return c
+
+
+def test_recurate_tech_calls_model_with_schema():
+    client = FakeAnthropicClient({"tech": ["Spring Boot", "Docker"]})
+    result = sp.recurate_tech(client, ["Java"], ["docker", "java", "spring-boot"])
+    assert result == ["Spring Boot", "Docker"]
+    kwargs = client.last_kwargs
+    assert kwargs["model"] == "claude-opus-4-8"
+    assert kwargs["output_config"]["format"]["schema"] == sp.TECH_SCHEMA
+
+
+def _wire_refresh(monkeypatch, languages, overrides=None):
+    monkeypatch.setattr(sp, "fetch_languages", lambda tok, fn: languages)
+    monkeypatch.setattr(sp, "fetch_portfolio_yml", lambda tok, fn: overrides or {})
+
+
+def test_refresh_skips_unchanged_basis(monkeypatch):
+    _wire_refresh(monkeypatch, ["Java"])
+    r = {**repo("a"), "topics": ["portfolio"]}
+    c = gen_card("a", basis=sp.tech_basis(r, ["Java"]))
+    summary = sp.refresh_tech_lists([c], {r["html_url"]: r}, "tok",
+                                    lambda: (_ for _ in ()).throw(AssertionError("no client")))
+    assert summary == [] and c["tech"] == ["Java"]
+
+
+def test_refresh_recurates_on_changed_basis(monkeypatch):
+    _wire_refresh(monkeypatch, ["Java", "Dockerfile"])
+    r = {**repo("a"), "topics": ["portfolio"]}
+    c = gen_card("a", basis=["Java", "portfolio"])
+    factory = lambda: FakeAnthropicClient({"tech": ["Java 21", "Docker"]})
+    summary = sp.refresh_tech_lists([c], {r["html_url"]: r}, "tok", factory)
+    assert c["tech"] == ["Java 21", "Docker"]
+    assert c["techBasis"] == sp.tech_basis(r, ["Java", "Dockerfile"])
+    assert summary and "a" in summary[0]
+
+
+def test_refresh_respects_tech_override(monkeypatch):
+    _wire_refresh(monkeypatch, ["Go"], overrides={"tech": ["Manual"]})
+    r = {**repo("a"), "topics": ["portfolio"]}
+    c = gen_card("a", basis=["old"])
+    summary = sp.refresh_tech_lists([c], {r["html_url"]: r}, "tok",
+                                    lambda: (_ for _ in ()).throw(AssertionError("no client")))
+    assert summary == [] and c["tech"] == ["Java"] and c["techBasis"] == ["old"]
+
+
+def test_refresh_ignores_handwritten_and_unmatched(monkeypatch):
+    _wire_refresh(monkeypatch, ["Go"])
+    hand = card("hand")
+    orphan = gen_card("orphan", basis=["old"])  # repo not in repos_by_url
+    summary = sp.refresh_tech_lists([hand, orphan], {}, "tok",
+                                    lambda: (_ for _ in ()).throw(AssertionError("no client")))
+    assert summary == []
