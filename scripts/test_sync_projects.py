@@ -201,6 +201,7 @@ def test_main_end_to_end_with_new_and_removed(monkeypatch, tmp_path):
     monkeypatch.setattr(sp, "fetch_portfolio_yml", lambda tok, fn: {})
     monkeypatch.setattr(sp, "fetch_languages", lambda tok, fn: ["Python"])
     monkeypatch.setattr(sp, "Anthropic", lambda: FakeAnthropicClient(TEXT))
+    monkeypatch.setattr(sp, "fill_images", lambda cards: [])
 
     assert sp.main([]) == 0
 
