@@ -28,8 +28,12 @@ changes — the frontend already renders whatever is in `projects.json`.
 | (neither)        | Undecided — Claude Code prompts the owner |
 
 A repo may additionally contain an optional `.portfolio.yml` with manual
-overrides (`title`, `description`, `descriptionDa`, `tech`, `image`). Fields
-present there always win over generated values.
+overrides (`title`, `description`, `descriptionDa`, `tech`, `image`,
+`liveUrl`). Fields present there always win over generated values — applied
+when the card is first created and re-applied to existing generated cards on
+every sync run, before tech re-curation and image filling. Apply-only
+semantics: removing a key from the file does not revert the card (the
+generated base text is not stored). Hand-written cards are never touched.
 
 ## Components
 

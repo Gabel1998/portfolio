@@ -313,6 +313,75 @@ def test_refresh_ignores_handwritten_and_unmatched(monkeypatch):
     assert summary == []
 
 
+def test_apply_overrides_updates_existing_generated_card(monkeypatch):
+    c = card("x", generated=True)
+    r = repo("x")
+    monkeypatch.setattr(sp, "fetch_portfolio_yml",
+                        lambda tok, fn: {"image": "/images/x.jpg"})
+    summary = sp.apply_overrides([c], {r["html_url"]: r}, "tok")
+    assert c["image"] == "/images/x.jpg"
+    assert summary and "x" in summary[0] and "image" in summary[0]
+
+
+def test_apply_overrides_is_idempotent(monkeypatch):
+    c = card("x", generated=True)
+    c["image"] = "/images/x.jpg"
+    r = repo("x")
+    monkeypatch.setattr(sp, "fetch_portfolio_yml",
+                        lambda tok, fn: {"image": "/images/x.jpg"})
+    assert sp.apply_overrides([c], {r["html_url"]: r}, "tok") == []
+
+
+def test_apply_overrides_skips_handwritten_cards(monkeypatch):
+    c = card("hand")  # generated=False
+    r = repo("hand")
+    kaldt = []
+    monkeypatch.setattr(sp, "fetch_portfolio_yml",
+                        lambda tok, fn: kaldt.append(fn) or {"title": "Nyt"})
+    assert sp.apply_overrides([c], {r["html_url"]: r}, "tok") == []
+    assert c["title"] == "hand"
+    assert kaldt == []  # .portfolio.yml must not even be fetched
+
+
+def test_apply_overrides_ignores_non_overridable_keys(monkeypatch):
+    c = card("x", generated=True)
+    r = repo("x")
+    monkeypatch.setattr(sp, "fetch_portfolio_yml",
+                        lambda tok, fn: {"slug": "hacked", "generated": False})
+    assert sp.apply_overrides([c], {r["html_url"]: r}, "tok") == []
+    assert c["slug"] == "x" and c["generated"] is True
+
+
+def test_apply_overrides_skips_cards_without_matching_repo(monkeypatch):
+    c = card("gone", generated=True)
+    monkeypatch.setattr(sp, "fetch_portfolio_yml",
+                        lambda tok, fn: {"image": "/images/gone.jpg"})
+    assert sp.apply_overrides([c], {}, "tok") == []
+    assert c["image"] is None
+
+
+def test_main_applies_overrides_to_existing_card(monkeypatch, tmp_path):
+    projects = tmp_path / "projects.json"
+    projects.write_text(json.dumps([card("eksisterende", generated=True)]))
+    monkeypatch.setattr(sp, "PROJECTS_JSON", projects)
+    monkeypatch.setenv("GITHUB_TOKEN", "tok")
+    monkeypatch.setenv("GITHUB_OUTPUT", str(tmp_path / "gh_output"))
+    monkeypatch.chdir(tmp_path)
+
+    monkeypatch.setattr(sp, "fetch_portfolio_repos", lambda tok: [repo("eksisterende")])
+    monkeypatch.setattr(sp, "fetch_portfolio_yml",
+                        lambda tok, fn: {"image": "/images/e.jpg"})
+    monkeypatch.setattr(sp, "refresh_tech_lists", lambda *a: [])
+    monkeypatch.setattr(sp, "fill_images", lambda cards: [])
+
+    assert sp.main([]) == 0
+
+    result = json.loads(projects.read_text())
+    assert result[0]["image"] == "/images/e.jpg"
+    assert "changes=true" in (tmp_path / "gh_output").read_text()
+    assert "eksisterende" in (tmp_path / "pr-body.md").read_text()
+
+
 def test_main_fills_images_and_refreshes_tech(monkeypatch, tmp_path):
     projects = tmp_path / "projects.json"
     projects.write_text(json.dumps([card("hand")]))

@@ -74,6 +74,29 @@ def gather_content(repo, readme, languages):
     return "\n".join(parts), thin
 
 
+def apply_overrides(cards, repos_by_url, token):
+    """Apply .portfolio.yml overrides to existing generated cards.
+
+    Apply-only: keys present in the file are set on the card; removing a key
+    from the file does not revert the card (the generated base text is not
+    stored anywhere). Hand-written cards are read-only and never touched.
+    Returns summary lines for the cards that actually changed.
+    """
+    summary = []
+    for card in cards:
+        if not card.get("generated") or card.get("github") not in repos_by_url:
+            continue
+        repo = repos_by_url[card["github"]]
+        overrides = fetch_portfolio_yml(token, repo["full_name"])
+        changed = sorted(k for k, v in overrides.items()
+                         if k in OVERRIDABLE and card.get(k) != v)
+        for key in changed:
+            card[key] = overrides[key]
+        if changed:
+            summary.append(f"- 🔁 Overrides applied to `{card['slug']}`: {', '.join(changed)}")
+    return summary
+
+
 def tech_basis(repo, languages):
     """Sorted snapshot of topics + languages; used to detect stack changes."""
     return sorted(set(repo.get("topics", [])) | set(languages))
@@ -272,6 +295,9 @@ def main(argv=None):
     summary.extend(f"- ➖ Removed: `{c['slug']}` (portfolio topic dropped)" for c in removed)
 
     repos_by_url = {r["html_url"]: r for r in repos}
+    # Overrides før tech-refresh og billedudfyldning: en tech-override skal
+    # vinde over re-kurateringen, og en image-override skal spare en capture.
+    summary.extend(apply_overrides(cards, repos_by_url, token))
     summary.extend(refresh_tech_lists(cards, repos_by_url, token, Anthropic))
     if args.dry_run:
         print("(dry-run: image filling skipped)")
